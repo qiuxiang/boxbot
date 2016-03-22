@@ -10,6 +10,7 @@
 
 .boxbot-bot {
   position: absolute;
+  transition: all .2s;
 }
 
 .boxbot-bot img {
@@ -20,20 +21,20 @@
   border-collapse: collapse;
 }
 
-.boxbot-map td {
+td.boxbot-box {
   border: 1px solid #eee;
   padding: 10px;
 }
 
-.boxbot-map td:first-child,
-.boxbot-map tr:first-child td {
+.boxbot-box[data-type="y-axis"],
+.boxbot-box[data-type="x-axis"] {
   border: 0;
 }
 
-.boxbot-y-axis {
+.boxbot-box[data-type="y-axis"] {
   text-align: right;
 }
 
-.boxbot-x-axis {
+.boxbot-box[data-type="x-axis"] {
   text-align: center;
 }
