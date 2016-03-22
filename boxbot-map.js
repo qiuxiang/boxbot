@@ -11,6 +11,9 @@ var BoxbotMap = function (selector, columns, rows) {
   this.init()
 }
 
+/**
+ * 初始化，生成地图
+ */
 BoxbotMap.prototype.init = function () {
   var html = ''
   for (var y = 0; y <= this.rows; y += 1) {
@@ -31,12 +34,36 @@ BoxbotMap.prototype.init = function () {
     html += '</tr>'
   }
   this.element.innerHTML = html
+  this.boxs = this.element.getElementsByTagName('td')
 }
 
+/**
+ * 获取指定位置的方块
+ *
+ * @param position
+ * @returns {*}
+ */
 BoxbotMap.prototype.get = function (position) {
-  return this.data[position[0]][position[1]]
+  return this.boxs[position[1] * (this.rows + 1) + position[0]]
 }
 
+/**
+ * 设置指定位置的方块类型
+ *
+ * @param position
+ * @param type
+ */
 BoxbotMap.prototype.set = function (position, type) {
   this.get(position).dataset.type = type
+}
+
+/**
+ * 判断指定位置是否为空
+ *
+ * @param position
+ * @returns {boolean}
+ */
+BoxbotMap.prototype.isNull = function (position) {
+  var box = this.get(position)
+  return box && box.dataset.type == 'null'
 }
