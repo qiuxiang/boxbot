@@ -16,8 +16,23 @@ var Boxbot = function () {
  * @param step 步数
  */
 Boxbot.prototype.move = function (direction, step) {
+  var unitOffsetPosition = boxbot.bot.getOffsetPosition(direction, 1)
+  var currentPosition = boxbot.bot.getCurrentPosition()
+  var moveAllowed = true
+
+  for (var s = 1; s <= step; s += 1) {
+    var x = currentPosition[0] + unitOffsetPosition[0] * s
+    var y = currentPosition[1] + unitOffsetPosition[1] * s
+
+    if (!this.map.isNull([x, y])) {
+      console.log('无法移动到 [' + x + ',' + y + ']')
+      return false
+    }
+  }
+
   boxbot.bot.turn(direction)
   boxbot.bot.move(direction, step)
+  return true
 }
 
 /**
@@ -49,3 +64,4 @@ var boxbot = new Boxbot()
 boxbot.bot.goto([1, 1])
 boxbot.exec(boxbot.move, ['right', 2])
 boxbot.exec(boxbot.move, ['bottom', 2])
+boxbot.exec(boxbot.move, ['left', 3])
