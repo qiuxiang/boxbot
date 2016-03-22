@@ -1,8 +1,8 @@
 /**
- * @param selector
- * @param columns
- * @param rows
  * @constructor
+ * @param {string} selector
+ * @param {int} columns
+ * @param {int} rows
  */
 var BoxbotMap = function (selector, columns, rows) {
   this.element = document.querySelector(selector)
@@ -40,8 +40,8 @@ BoxbotMap.prototype.init = function () {
 /**
  * 获取指定位置的方块
  *
- * @param position
- * @returns {*}
+ * @param {[x, y]} position
+ * @returns {Element}
  */
 BoxbotMap.prototype.get = function (position) {
   return this.boxs[position[1] * (this.rows + 1) + position[0]]
@@ -50,7 +50,7 @@ BoxbotMap.prototype.get = function (position) {
 /**
  * 设置指定位置的方块类型
  *
- * @param position
+ * @param {[x, y]} position
  * @param type
  */
 BoxbotMap.prototype.set = function (position, type) {
@@ -60,7 +60,7 @@ BoxbotMap.prototype.set = function (position, type) {
 /**
  * 判断指定位置是否为空
  *
- * @param position
+ * @param {[x, y]} position
  * @returns {boolean}
  */
 BoxbotMap.prototype.isNull = function (position) {

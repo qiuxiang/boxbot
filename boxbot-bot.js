@@ -1,5 +1,6 @@
 /**
  * @constructor
+ * @param {string} selector
  */
 var BoxbotBot = function (selector) {
   this.element = document.querySelector(selector)
@@ -8,8 +9,8 @@ var BoxbotBot = function (selector) {
 /**
  * 方向转换成角度
  *
- * @param direction 方向
- * @returns {int} 角度
+ * @param {string} direction
+ * @returns {int}
  */
 BoxbotBot.prototype.direction2angle = function (direction) {
   return {'bottom': 0, 'left': 90, 'top': 180, 'right': -90}[direction]
@@ -18,8 +19,8 @@ BoxbotBot.prototype.direction2angle = function (direction) {
 /**
  * 角度转换成方向
  *
- * @param angle 角度
- * @returns {string} 方向
+ * @param {int} angle
+ * @returns {string}
  */
 BoxbotBot.prototype.angle2direction = function (angle) {
   return {'0': 'bottom', '90': 'left', '180': 'top', '-90': 'right'}[angle]
@@ -28,7 +29,7 @@ BoxbotBot.prototype.angle2direction = function (angle) {
 /**
  * 转换方向
  *
- * @param direction 方向
+ * @param {string} direction
  */
 BoxbotBot.prototype.turn = function (direction) {
   this.element.style.transform = 'rotate(' + this.direction2angle(direction) + 'deg)'
@@ -37,7 +38,7 @@ BoxbotBot.prototype.turn = function (direction) {
 /**
  * 获取当前方向
  *
- * @return {string} 方向
+ * @return {string}
  */
 BoxbotBot.prototype.getDirection = function () {
   var match = this.element.style.transform.match(/rotate\((.*)deg\)/)
@@ -51,7 +52,7 @@ BoxbotBot.prototype.getDirection = function () {
 /**
  * 获取指定方向上偏移的位置
  *
- * @param direction
+ * @param {string} direction
  * @param offset
  * @returns {[x, y]}
  */
@@ -61,7 +62,7 @@ BoxbotBot.prototype.getOffsetPosition = function (direction, offset) {
 }
 
 /**
- * @param direction
+ * @param {string} direction
  * @returns {int}
  */
 BoxbotBot.prototype.getCurrentOffset = function (direction) {
@@ -87,9 +88,9 @@ BoxbotBot.prototype.getCurrentPosition = function () {
 /**
  * 以当前位置为基准，获取指定方向上的位置
  *
- * @param direction 方向
- * @param offset 便宜量
- * @returns {[x, y]} 位置坐标
+ * @param {string} [direction]
+ * @param {int} [offset=0]
+ * @returns {[x, y]}
  */
 BoxbotBot.prototype.getPosition = function (direction, offset) {
   direction = direction || this.getDirection()
@@ -102,7 +103,7 @@ BoxbotBot.prototype.getPosition = function (direction, offset) {
 /**
  * 跳到指定位置
  *
- * @param position
+ * @param {[x, y]} position
  */
 BoxbotBot.prototype.goto = function (position) {
   this.element.style.left = position[0] * this.element.clientWidth + 'px'
@@ -112,8 +113,8 @@ BoxbotBot.prototype.goto = function (position) {
 /**
  * 朝指定方向移动
  *
- * @param direction 方向
- * @param step 步数
+ * @param {string} direction
+ * @param {int} step
  */
 BoxbotBot.prototype.move = function (direction, step) {
   this.goto(this.getPosition(direction, step))

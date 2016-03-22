@@ -12,8 +12,8 @@ var Boxbot = function () {
 /**
  * 朝指定方向旋转并移动
  *
- * @param direction 方向
- * @param step 步数
+ * @param {string} direction
+ * @param {int} step
  */
 Boxbot.prototype.move = function (direction, step) {
   var unitOffsetPosition = boxbot.bot.getOffsetPosition(direction, 1)
@@ -35,8 +35,8 @@ Boxbot.prototype.move = function (direction, step) {
 /**
  * 在任务循环里运行任务
  *
- * @param func
- * @param params
+ * @param {Function} func
+ * @param {Array} params
  * @return Promise
  */
 Boxbot.prototype.exec = function (func, params) {
