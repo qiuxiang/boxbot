@@ -1,0 +1,39 @@
+.boxbot {
+  position: relative;
+}
+
+.boxbot-box {
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.boxbot-bot {
+  position: absolute;
+}
+
+.boxbot-bot img {
+  width: 100%;
+}
+
+.boxbot-map {
+  border-collapse: collapse;
+}
+
+.boxbot-map td {
+  border: 1px solid #eee;
+  padding: 10px;
+}
+
+.boxbot-map td:first-child,
+.boxbot-map tr:first-child td {
+  border: 0;
+}
+
+.boxbot-y-axis {
+  text-align: right;
+}
+
+.boxbot-x-axis {
+  text-align: center;
+}
