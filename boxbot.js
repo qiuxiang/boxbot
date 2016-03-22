@@ -35,8 +35,8 @@ Boxbot.prototype.move = function (direction, step) {
 /**
  * 在任务循环里运行任务
  *
- * @param {Function} func
- * @param {Array} params
+ * @param {function} func
+ * @param {[]} params
  * @return Promise
  */
 Boxbot.prototype.exec = function (func, params) {

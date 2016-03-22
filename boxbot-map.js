@@ -40,7 +40,7 @@ BoxbotMap.prototype.init = function () {
 /**
  * 获取指定位置的方块
  *
- * @param {[x, y]} position
+ * @param {[int]} position
  * @returns {Element}
  */
 BoxbotMap.prototype.get = function (position) {
@@ -50,7 +50,7 @@ BoxbotMap.prototype.get = function (position) {
 /**
  * 设置指定位置的方块类型
  *
- * @param {[x, y]} position
+ * @param {[int]} position
  * @param type
  */
 BoxbotMap.prototype.set = function (position, type) {
@@ -60,7 +60,7 @@ BoxbotMap.prototype.set = function (position, type) {
 /**
  * 判断指定位置是否为空
  *
- * @param {[x, y]} position
+ * @param {[int]} position
  * @returns {boolean}
  */
 BoxbotMap.prototype.isNull = function (position) {

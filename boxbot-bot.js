@@ -54,7 +54,7 @@ BoxbotBot.prototype.getDirection = function () {
  *
  * @param {string} direction
  * @param offset
- * @returns {[x, y]}
+ * @returns {[int]}
  */
 BoxbotBot.prototype.getOffsetPosition = function (direction, offset) {
   var position = {'bottom': [0, 1], 'left': [-1, 0], 'top': [0, -1], 'right': [1, 0]}[direction]
@@ -77,7 +77,7 @@ BoxbotBot.prototype.getCurrentOffset = function (direction) {
 /**
  * 获取当前位置
  *
- * @returns {[x, y]}
+ * @returns {[int]}
  */
 BoxbotBot.prototype.getCurrentPosition = function () {
   return [
@@ -90,7 +90,7 @@ BoxbotBot.prototype.getCurrentPosition = function () {
  *
  * @param {string} [direction]
  * @param {int} [offset=0]
- * @returns {[x, y]}
+ * @returns {[int]}
  */
 BoxbotBot.prototype.getPosition = function (direction, offset) {
   direction = direction || this.getDirection()
@@ -103,7 +103,7 @@ BoxbotBot.prototype.getPosition = function (direction, offset) {
 /**
  * 跳到指定位置
  *
- * @param {[x, y]} position
+ * @param {[int]} position
  */
 BoxbotBot.prototype.goto = function (position) {
   this.element.style.left = position[0] * this.element.clientWidth + 'px'
