@@ -9,6 +9,34 @@ var Boxbot = function () {
   this.running = false
 }
 
+Boxbot.prototype.commands = [
+  {
+    pattern: /^go(\s+)?(\w+)?$/i,
+    handler: function (step) {
+      step = arguments[1] || 1
+      return this.run(this.move, [this.bot.getDirection(), arguments[1]])
+    }
+  }
+]
+
+/**
+ * 运行命令
+ *
+ * @param {string} string
+ * @returns {*}
+ */
+Boxbot.prototype.exec = function (string) {
+  for (var i = 0; i < this.commands.length; i += 1) {
+    var command = this.commands[i]
+    var match = string.match(command.pattern)
+    if (match) {
+      match.shift()
+      return command.handler.apply(this, match)
+    }
+  }
+  throw '命令"' + string + '"解析错误'
+}
+
 /**
  * 朝指定方向旋转并移动
  *
@@ -39,7 +67,7 @@ Boxbot.prototype.move = function (direction, step) {
  * @param {[]} params
  * @return Promise
  */
-Boxbot.prototype.exec = function (func, params) {
+Boxbot.prototype.run = function (func, params) {
   var _this = this
   var promise = new Promise(function (resolve, reject) {
     _this.queue.push({func: func, params: params, callback: function (exception) {
@@ -64,23 +92,43 @@ Boxbot.prototype.taskloop = function () {
     try {
       task.callback(task.func.apply(this, task.params))
     } catch (e) {
+      this.running = false
+      this.queue = []
       return task.callback(e)
     }
 
     // 等待动画结束后运行下一个任务
-    var _this = this
-    setTimeout(function () { _this.taskloop() }, this.duration)
-
+    setTimeout(this.proxy(this, this.taskloop), this.duration)
     this.running = true
   } else {
     this.running = false
   }
 }
 
+/**
+ * 提供类似 jQuery.proxy() 的功能
+ *
+ * @param {*} context
+ * @param {function} func
+ * @param {[]} [params]
+ * @returns {function}
+ */
+Boxbot.prototype.proxy = function (context, func, params) {
+  return function () {
+    func.apply(context, params)
+  }
+}
+
 var boxbot = new Boxbot()
 boxbot.bot.goto([1, 1])
-boxbot.exec(boxbot.move, ['right', 2])
-boxbot.exec(boxbot.move, ['bottom', 2])
-boxbot.exec(boxbot.move, ['left', 3]).catch(function (e) {
+boxbot.run(boxbot.move, ['right', 2])
+boxbot.run(boxbot.move, ['bottom', 2])
+boxbot.run(boxbot.move, ['left', 3]).catch(function (e) {
   console.log(e)
 })
+setTimeout(function () {
+  boxbot.run(boxbot.move, ['bottom', 2])
+  boxbot.exec('go').catch(function (e) {
+    console.log(e)
+  })
+}, 2000)
