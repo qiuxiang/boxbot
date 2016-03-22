@@ -4,6 +4,9 @@
 var Boxbot = function () {
   this.bot = new BoxbotBot('.boxbot-bot')
   this.map = new BoxbotMap('.boxbot-map', 10, 10)
+  this.duration = 500
+  this.queue = []
+  this.running = false
 }
 
 /**
@@ -17,6 +20,32 @@ Boxbot.prototype.move = function (direction, step) {
   boxbot.bot.move(direction, step)
 }
 
+/**
+ * 在任务循环里运行任务
+ *
+ * @param func
+ * @param params
+ */
+Boxbot.prototype.exec = function (func, params) {
+  this.queue.push([func, params])
+  if (!this.running) {
+    this.taskloop()
+  }
+}
+
+Boxbot.prototype.taskloop = function () {
+  var task = this.queue.shift()
+  if (task) {
+    var _this = this
+    setTimeout(function () { _this.taskloop() }, this.duration)
+    task[0].apply(this, task[1])
+    this.running = true
+  } else {
+    this.running = false
+  }
+}
+
 var boxbot = new Boxbot()
 boxbot.bot.goto([1, 1])
-boxbot.move('right', 2)
+boxbot.exec(boxbot.move, ['right', 2])
+boxbot.exec(boxbot.move, ['bottom', 2])
