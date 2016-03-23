@@ -15,13 +15,13 @@ Boxbot.prototype.commands = [
   {
     pattern: /^go(\s+)?(\w+)?$/i,
     handler: function (step) {
-      return this.run(this.go, [arguments[1] || 1])
+      return this.run(this.go, [arguments[1]])
     }
   },
   {
     pattern: /^tun\s+(lef|rig|bac)$/i,
     handler: function (direction) {
-      return this.run(this.turn, [{lef: -90, rig: 90, bac: 180}[direction.toLowerCase()]])
+      return this.run(this.rotate, [{lef: -90, rig: 90, bac: 180}[direction.toLowerCase()]])
     }
   },
   {
@@ -106,8 +106,17 @@ Boxbot.prototype.setColor = function (color) {
  *
  * @param {int} angle
  */
-Boxbot.prototype.turn = function (angle) {
+Boxbot.prototype.rotate = function (angle) {
   this.bot.rotate(angle)
+}
+
+/**
+ * 转换方向
+ *
+ * @param {int} direction
+ */
+Boxbot.prototype.turn = function (direction) {
+  this.bot.turn(direction)
 }
 
 /**
@@ -129,7 +138,7 @@ Boxbot.prototype.moveDirect = function (direction, step) {
  */
 Boxbot.prototype.move = function (direction, step) {
   this.checkPath(direction, step)
-  boxbot.bot.turn(direction)
+  boxbot.bot.rotate(direction)
   boxbot.bot.move(direction, step)
 }
 
@@ -146,9 +155,10 @@ Boxbot.prototype.goto = function (position, turn) {
 /**
  * 朝当前方向移动
  *
- * @param {int} step
+ * @param {int} [step=1]
  */
 Boxbot.prototype.go = function (step) {
+  step = step || 1
   var direction = boxbot.bot.getDirection()
   this.checkPath(direction, step)
   boxbot.bot.move(direction, step)
@@ -178,7 +188,7 @@ Boxbot.prototype.checkPath = function (direction, step) {
  * 在任务循环里运行任务
  *
  * @param {function} func
- * @param {[]} params
+ * @param {[]} [params]
  * @return Promise
  */
 Boxbot.prototype.run = function (func, params) {
@@ -240,37 +250,3 @@ Boxbot.prototype.search = function (target, algorithm) {
     throw '无法移动到 [' + target[0] + ',' + target[1] + ']'
   }
 }
-
-var boxbot = new Boxbot()
-boxbot.bot.goto([1, 1])
-boxbot.map.set([5, 5], 'wall')
-boxbot.map.set([5, 6], 'wall')
-boxbot.map.set([5, 7], 'wall')
-boxbot.map.set([5, 8], 'wall')
-boxbot.map.set([3, 3], 'wall')
-boxbot.map.set([3, 4], 'wall')
-boxbot.map.set([3, 5], 'wall')
-boxbot.map.set([3, 6], 'wall')
-boxbot.map.set([1, 8], 'wall')
-boxbot.map.set([2, 8], 'wall')
-boxbot.map.set([3, 8], 'wall')
-boxbot.map.set([4, 8], 'wall')
-boxbot.map.set([6, 4], 'wall')
-boxbot.map.set([7, 4], 'wall')
-boxbot.map.set([8, 4], 'wall')
-boxbot.map.set([9, 4], 'wall')
-boxbot.exec('mov to 6,7')
-//boxbot.exec('tun lef')
-//boxbot.exec('go')
-//boxbot.exec('mov bot 2')
-//boxbot.exec('biud')
-//boxbot.exec('mov rig')
-//boxbot.exec('mov bot')
-//boxbot.exec('tun rig')
-//boxbot.exec('bru #000')
-//boxbot.exec('tra rig 2')
-//boxbot.exec('tun lef')
-//boxbot.exec('go 4')
-//boxbot.exec('tun bac')
-
-var editor = new BoxbotEditor('.boxbot-commander')
