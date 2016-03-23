@@ -42,3 +42,44 @@ td.boxbot-box {
 .boxbot-box[data-type="wall"] {
   background-color: #eee;
 }
+
+.boxbot-commander {
+  margin-top: 20px;
+  height: 200px;
+  overflow: hidden;
+  padding-left: 15px;
+}
+
+.commander-lines-wrapper,
+.commander-editor {
+  float: left;
+  font-family: Menlo, Consolas, monospace;
+  line-height: 20px;
+  height: 100%;
+}
+
+.commander-lines-wrapper {
+  border-radius: 4px 0 0 4px;
+  background-color: #eee;
+  width: 25px;
+  font-size: 14px;
+  text-align: right;
+}
+
+.commander-lines {
+  position: relative;
+}
+
+.commander-lines-item {
+  padding-right: 2px;
+}
+
+.commander-editor {
+  font-size: 16px;
+  width: 400px;
+  box-sizing: border-box;
+  border: 1px solid #eee;
+  border-radius: 0 4px 4px 0;
+  outline: none;
+  padding: 0 0 0 5px;
+}

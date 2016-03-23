@@ -182,7 +182,7 @@ Boxbot.prototype.checkPath = function (direction, step) {
  * @return Promise
  */
 Boxbot.prototype.run = function (func, params) {
-  var promise = new Promise(this.proxy(this, function (resolve, reject) {
+  var promise = new Promise(proxy(this, function (resolve, reject) {
     this.queue.push({
       func: func, params: params, callback: function (exception) {
         if (exception) {
@@ -214,7 +214,7 @@ Boxbot.prototype.taskloop = function () {
     }
 
     // 等待动画结束后运行下一个任务
-    setTimeout(this.proxy(this, this.taskloop), this.duration)
+    setTimeout(proxy(this, this.taskloop), this.duration)
   } else {
     this.running = false
   }
@@ -230,7 +230,7 @@ Boxbot.prototype.search = function (target, algorithm) {
   if (this.map.getType(target) == 'null') {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
     if (path) {
-      path.forEach(this.proxy(this, function (item) {
+      path.forEach(proxy(this, function (item) {
         this.run(this.goto, [item, true])
       }))
     } else {
@@ -238,23 +238,6 @@ Boxbot.prototype.search = function (target, algorithm) {
     }
   } else {
     throw '无法移动到 [' + target[0] + ',' + target[1] + ']'
-  }
-}
-
-/**
- * 简易版 jQuery.proxy()
- *
- * @param {*} context
- * @param {function} func
- * @param {[]} [params]
- * @returns {function}
- */
-Boxbot.prototype.proxy = function (context, func, params) {
-  return function () {
-    if (arguments.length > 0) {
-      params = arguments
-    }
-    func.apply(context, params)
   }
 }
 
@@ -289,3 +272,5 @@ boxbot.exec('mov to 6,7')
 //boxbot.exec('tun lef')
 //boxbot.exec('go 4')
 //boxbot.exec('tun bac')
+
+var editor = new BoxbotEditor('.boxbot-commander')
