@@ -53,7 +53,8 @@ Boxbot.prototype.commands = [
   {
     pattern: /^mov\s+to\s+(\d+)[, ](\d+)(\s+)?(dfs)?$/i,
     handler: function (x, y) {
-      return this.search([parseInt(x), parseInt(y)])
+      return this.run(this.search, [[parseInt(x), parseInt(y)]])
+      //return this.search([parseInt(x), parseInt(y)])
     }
   }
 ]
@@ -201,6 +202,7 @@ Boxbot.prototype.run = function (func, params) {
 }
 
 Boxbot.prototype.taskloop = function () {
+  this.running = true
   var task = this.queue.shift()
   if (task) {
     try {
@@ -213,7 +215,6 @@ Boxbot.prototype.taskloop = function () {
 
     // 等待动画结束后运行下一个任务
     setTimeout(this.proxy(this, this.taskloop), this.duration)
-    this.running = true
   } else {
     this.running = false
   }
@@ -232,6 +233,8 @@ Boxbot.prototype.search = function (target, algorithm) {
       path.forEach(this.proxy(this, function (item) {
         this.run(this.goto, [item])
       }))
+    } else {
+      throw '寻路失败'
     }
   } else {
     throw '无法移动到 [' + target[0] + ',' + target[1] + ']'
