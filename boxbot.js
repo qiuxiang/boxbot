@@ -215,6 +215,25 @@ Boxbot.prototype.taskloop = function () {
 }
 
 /**
+ * @param {[int]} distance 目标距离
+ * @returns {[{weight: int, position: [int]}]}
+ */
+Boxbot.prototype.createPositionsWithWeight = function (distance) {
+  var positions = [
+    {position: [0, 1]}, {position: [-1, 0]}, {position: [0, -1]}, {position: [1, 0]}
+  ].map(function (item) {
+    item.weight = item.position[0] * distance[0] + item.position[1] * distance[1]
+    return item
+  })
+
+  positions.sort(function (a, b) {
+    return b.weight - a.weight
+  })
+
+  return positions
+}
+
+/**
  * 路径搜索，递归实现的深度优先搜索算法
  *
  * @param target
@@ -224,24 +243,27 @@ Boxbot.prototype.taskloop = function () {
  */
 Boxbot.prototype.search = function (target, path, visited) {
   visited = visited || {}
-  var positions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+
   var current = path[path.length - 1]
   if (current[0] == target[0] && current[1] == target[1]) {
     return path
   }
 
-  for (var i = 0; i < 4; i += 1) {
-    var next = [positions[i][0] + current[0], positions[i][1] + current[1]]
+  var positions = this.createPositionsWithWeight([target[0] - current[0], target[1] - current[1]])
+  for (var i = 0; i < positions.length; i += 1) {
+    var next = [positions[i].position[0] + current[0], positions[i].position[1] + current[1]]
     var positionKey = next[0] + '-' + next[1]
+
     if (this.map.getType(next) == 'null' && !visited[positionKey]) {
       path.push(next)
       visited[positionKey] = next
+
       var result = this.search(target, path, visited)
       if (result) {
         return result
-      } else {
-        path.pop()
       }
+
+      path.pop()
     }
   }
 }
@@ -262,7 +284,23 @@ Boxbot.prototype.proxy = function (context, func, params) {
 
 var boxbot = new Boxbot()
 boxbot.bot.goto([1, 1])
-boxbot.search([2,1], [boxbot.bot.getCurrentPosition()]).forEach(function (item) {
+boxbot.map.set([5, 5], 'wall')
+boxbot.map.set([5, 6], 'wall')
+boxbot.map.set([5, 7], 'wall')
+boxbot.map.set([5, 8], 'wall')
+boxbot.map.set([3, 3], 'wall')
+boxbot.map.set([3, 4], 'wall')
+boxbot.map.set([3, 5], 'wall')
+boxbot.map.set([3, 6], 'wall')
+boxbot.map.set([1, 8], 'wall')
+boxbot.map.set([2, 8], 'wall')
+boxbot.map.set([3, 8], 'wall')
+boxbot.map.set([4, 8], 'wall')
+boxbot.map.set([6, 4], 'wall')
+boxbot.map.set([7, 4], 'wall')
+boxbot.map.set([8, 4], 'wall')
+boxbot.map.set([9, 4], 'wall')
+boxbot.search([6, 7], [boxbot.bot.getCurrentPosition()]).forEach(function (item) {
   boxbot.run(boxbot.goto, [item])
 })
 //boxbot.exec('tun lef')
