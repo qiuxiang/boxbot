@@ -14,7 +14,13 @@ Boxbot.prototype.commands = [
     pattern: /^go(\s+)?(\w+)?$/i,
     handler: function (step) {
       step = arguments[1] || 1
-      return this.run(this.move, [this.bot.getDirection(), arguments[1]])
+      return this.run(this.move, [this.bot.getDirection(), step])
+    }
+  },
+  {
+    pattern: /^tun\s+(lef|rig|bac)$/i,
+    handler: function (direction) {
+      return this.run(this.turn, [{lef: -90, rig: 90, bac: 180}[direction.toLowerCase()]])
     }
   }
 ]
@@ -35,6 +41,15 @@ Boxbot.prototype.exec = function (string) {
     }
   }
   throw '命令"' + string + '"解析错误'
+}
+
+/**
+ * 旋转
+ *
+ * @param {int} angle
+ */
+Boxbot.prototype.turn = function (angle) {
+  this.bot.rotate(angle)
 }
 
 /**
@@ -121,14 +136,7 @@ Boxbot.prototype.proxy = function (context, func, params) {
 
 var boxbot = new Boxbot()
 boxbot.bot.goto([1, 1])
-boxbot.run(boxbot.move, ['right', 2])
-boxbot.run(boxbot.move, ['bottom', 2])
-boxbot.run(boxbot.move, ['left', 3]).catch(function (e) {
-  console.log(e)
-})
-setTimeout(function () {
-  boxbot.run(boxbot.move, ['bottom', 2])
-  boxbot.exec('go').catch(function (e) {
-    console.log(e)
-  })
-}, 2000)
+boxbot.exec('tun lef')
+boxbot.exec('tun lef')
+boxbot.exec('tun lef')
+boxbot.exec('tun lef')

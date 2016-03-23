@@ -36,17 +36,35 @@ BoxbotBot.prototype.turn = function (direction) {
 }
 
 /**
+ * 获取当前旋转角度
+ *
+ * @return {int}
+ */
+BoxbotBot.prototype.getAngle = function () {
+  var match = this.element.style.transform.match(/rotate\((.*)deg\)/)
+  if (match) {
+    return parseInt(match[1])
+  } else {
+    return 0
+  }
+}
+
+/**
+ * 旋转
+ *
+ * @param {int} angle
+ */
+BoxbotBot.prototype.rotate = function (angle) {
+  this.element.style.transform = 'rotate(' + (this.getAngle() + angle) + 'deg)'
+}
+
+/**
  * 获取当前方向
  *
  * @return {string}
  */
 BoxbotBot.prototype.getDirection = function () {
-  var match = this.element.style.transform.match(/rotate\((.*)deg\)/)
-  if (match) {
-    return this.angle2direction(parseInt(match[1]))
-  } else {
-    return 'bottom'
-  }
+  return this.angle2direction(this.getAngle())
 }
 
 /**
