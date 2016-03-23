@@ -14,7 +14,7 @@ var BoxbotBot = function (selector) {
 /**
  * 转换方向
  *
- * @param {string} direction
+ * @param {int} direction
  */
 BoxbotBot.prototype.turn = function (direction) {
   var ROTATE_MAP = {
@@ -63,7 +63,7 @@ BoxbotBot.prototype.getDirection = function () {
 /**
  * 获取指定方向上偏移的位置
  *
- * @param {string} direction
+ * @param {int} direction
  * @param offset
  * @returns {[int]}
  */
@@ -73,7 +73,7 @@ BoxbotBot.prototype.getOffsetPosition = function (direction, offset) {
 }
 
 /**
- * @param {string} direction
+ * @param {int} direction
  * @returns {int}
  */
 BoxbotBot.prototype.getCurrentOffset = function (direction) {
@@ -99,7 +99,7 @@ BoxbotBot.prototype.getCurrentPosition = function () {
 /**
  * 以当前位置为基准，获取指定方向上的位置
  *
- * @param {string} [direction]
+ * @param {int} [direction]
  * @param {int} [offset=0]
  * @returns {[int]}
  */
@@ -124,7 +124,7 @@ BoxbotBot.prototype.goto = function (position) {
 /**
  * 朝指定方向移动
  *
- * @param {string} direction
+ * @param {int} direction
  * @param {int} step
  */
 BoxbotBot.prototype.move = function (direction, step) {
