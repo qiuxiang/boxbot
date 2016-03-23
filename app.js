@@ -9,6 +9,7 @@ Application.prototype.init = function () {
   document.addEventListener('keydown', proxy(this, this.hotkey))
   document.querySelector('#btn-run').addEventListener('click', proxy(this, this.run))
   document.querySelector('#btn-reset').addEventListener('click', proxy(this, this.reset))
+  document.querySelector('#btn-random').addEventListener('click', proxy(this, this.random))
 }
 
 Application.prototype.hotkey = function (event) {
@@ -51,10 +52,15 @@ Application.prototype.run = function () {
   })
 }
 
+Application.prototype.random = function () {
+  var positions = []
+}
+
 Application.prototype.reset = function () {
   this.boxbot.queue = []
   this.boxbot.bot.turn(BOTTOM)
   this.boxbot.bot.goto([1, 1])
+  this.boxbot.map.clear()
   this.editor.clearFlags()
 }
 

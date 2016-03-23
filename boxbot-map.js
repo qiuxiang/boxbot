@@ -37,6 +37,16 @@ BoxbotMap.prototype.init = function () {
   this.boxs = this.element.getElementsByTagName('td')
 }
 
+BoxbotMap.prototype.clear = function () {
+  for (var y = 1; y <= this.rows; y += 1) {
+    for (var x = 1; x <= this.columns; x += 1) {
+      var box = this.get([x, y])
+      box.style.backgroundColor = ''
+      box.dataset.type = 'null'
+    }
+  }
+}
+
 /**
  * 获取指定位置的方块
  *
