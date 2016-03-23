@@ -22,7 +22,7 @@
 }
 
 td.boxbot-box {
-  border: 1px solid #eee;
+  border: 1px solid #ecf0f1;
   padding: 10px;
 }
 
@@ -40,11 +40,14 @@ td.boxbot-box {
 }
 
 .boxbot-box[data-type="wall"] {
-  background-color: #eee;
+  background-color: #ecf0f1;
+}
+
+.boxbot-controls {
+  padding: 20px 0  10px 40px;
 }
 
 .boxbot-commander {
-  margin-top: 20px;
   height: 200px;
   overflow: hidden;
   padding-left: 15px;
@@ -60,7 +63,7 @@ td.boxbot-box {
 
 .commander-lines-wrapper {
   border-radius: 4px 0 0 4px;
-  background-color: #eee;
+  background-color: #ecf0f1;
   width: 25px;
   font-size: 14px;
   text-align: right;
@@ -74,11 +77,26 @@ td.boxbot-box {
   padding-right: 2px;
 }
 
+.commander-lines-item.error {
+  background-color: #ea6153;
+  color: #fff;
+}
+
+.commander-lines-item.success {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+.commander-lines-item.warning {
+  background-color: #f39c12;
+  color: #fff;
+}
+
 .commander-editor {
   font-size: 16px;
   width: 400px;
   box-sizing: border-box;
-  border: 1px solid #eee;
+  border: 1px solid #ecf0f1;
   border-radius: 0 4px 4px 0;
   outline: none;
   padding: 0 0 0 5px;

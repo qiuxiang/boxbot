@@ -19,6 +19,12 @@ Boxbot.prototype.commands = [
     }
   },
   {
+    pattern: /^go\s+to\s+(\d+)[, ](\d+)$/i,
+    handler: function (x, y) {
+      return this.run(this.goto, [[x, y]])
+    }
+  },
+  {
     pattern: /^tun\s+(lef|rig|bac)$/i,
     handler: function (direction) {
       return this.run(this.rotate, [{lef: -90, rig: 90, bac: 180}[direction.toLowerCase()]])
@@ -59,21 +65,36 @@ Boxbot.prototype.commands = [
 ]
 
 /**
+ * 解析命令，如果成功则返回命令对象，否则返回 false
+ *
+ * @param string
+ * @returns {boolean|{handler: function, params: RegExp}}
+ */
+Boxbot.prototype.parse = function (string) {
+  for (var i = 0; i < this.commands.length; i += 1) {
+    var command = this.commands[i]
+    var match = string.match(command.pattern)
+    if (match) {
+      match.shift()
+      return {handler: command.handler, params: match}
+    }
+  }
+  return false
+}
+
+/**
  * 运行命令
  *
  * @param {string} string
  * @returns {*}
  */
 Boxbot.prototype.exec = function (string) {
-  for (var i = 0; i < this.commands.length; i += 1) {
-    var command = this.commands[i]
-    var match = string.match(command.pattern)
-    if (match) {
-      match.shift()
-      return command.handler.apply(this, match)
-    }
+  var command = this.parse(string)
+  if (command) {
+    return command.handler.apply(this, command.params)
+  } else {
+    return false
   }
-  throw '命令"' + string + '"解析错误'
 }
 
 /**
@@ -138,7 +159,7 @@ Boxbot.prototype.moveDirect = function (direction, step) {
  */
 Boxbot.prototype.move = function (direction, step) {
   this.checkPath(direction, step)
-  boxbot.bot.rotate(direction)
+  boxbot.bot.turn(direction)
   boxbot.bot.move(direction, step)
 }
 

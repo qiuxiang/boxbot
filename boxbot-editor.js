@@ -10,6 +10,7 @@ var BoxbotEditor = function (selector) {
   this.$textarea.addEventListener('scroll', proxy(this, function (event) {
     this.$lines.style.top = -event.target.scrollTop + 'px'
   }))
+  this.updateLines()
 }
 
 BoxbotEditor.prototype.updateLines = function () {
@@ -23,16 +24,27 @@ BoxbotEditor.prototype.updateLines = function () {
   }
 
   this.$lines.innerHTML = html
-  console.log(this.getCodes())
+}
+
+BoxbotEditor.prototype.getLines = function () {
+  return this.element.querySelectorAll('.commander-lines-item')
+}
+
+BoxbotEditor.prototype.setFlag = function (line, flag) {
+  this.getLines()[line].classList.add(flag)
+}
+
+BoxbotEditor.prototype.clearFlags = function () {
+  var lines = this.getLines()
+  for (var i = 0; i < lines.length; i += 1) {
+    lines[i].className = 'commander-lines-item'
+  }
 }
 
 BoxbotEditor.prototype.getCodes = function () {
   var codes = []
   this.$textarea.value.split('\n').forEach(function (code) {
-    code = code.trim()
-    if (code) {
-      codes.push(code)
-    }
+    codes.push(code.trim())
   })
   return codes
 }
