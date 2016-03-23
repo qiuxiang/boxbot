@@ -9,18 +9,33 @@ var Boxbot = function () {
   this.running = false
 }
 
+Boxbot.prototype.DIRECTION_MAP = {bot: BOTTOM, lef: LEFT, top: TOP, rig: RIGHT}
+
 Boxbot.prototype.commands = [
   {
     pattern: /^go(\s+)?(\w+)?$/i,
     handler: function (step) {
-      step = arguments[1] || 1
-      return this.run(this.move, [null, step])
+      return this.run(this.go, [arguments[1] || 1])
     }
   },
   {
     pattern: /^tun\s+(lef|rig|bac)$/i,
     handler: function (direction) {
       return this.run(this.turn, [{lef: -90, rig: 90, bac: 180}[direction.toLowerCase()]])
+    }
+  },
+  {
+    pattern: /^mov\s+(bot|lef|top|rig)(\s+)?(\w+)?$/i,
+    handler: function () {
+      var direction = this.DIRECTION_MAP[arguments[0].toLowerCase()]
+      return this.run(this.move, [direction, arguments[2] || 1])
+    }
+  },
+  {
+    pattern: /^tra\s+(bot|lef|top|rig)(\s+)?(\w+)?$/i,
+    handler: function () {
+      var direction = this.DIRECTION_MAP[arguments[0].toLowerCase()]
+      return this.run(this.moveDirect, [direction, arguments[2] || 1])
     }
   }
 ]
@@ -53,14 +68,46 @@ Boxbot.prototype.turn = function (angle) {
 }
 
 /**
+ * 朝指定方向移动
+ *
+ * @param {string} direction
+ * @param {int} step
+ */
+Boxbot.prototype.moveDirect = function (direction, step) {
+  this.checkPath(direction, step)
+  boxbot.bot.move(direction, step)
+}
+
+/**
  * 朝指定方向旋转并移动
  *
  * @param {string} direction
  * @param {int} step
  */
 Boxbot.prototype.move = function (direction, step) {
-  direction = direction || boxbot.bot.getDirection()
+  this.checkPath(direction, step)
+  boxbot.bot.turn(direction)
+  boxbot.bot.move(direction, step)
+}
 
+/**
+ * 朝当前方向移动
+ *
+ * @param {int} step
+ */
+Boxbot.prototype.go = function (step) {
+  var direction = boxbot.bot.getDirection()
+  this.checkPath(direction, step)
+  boxbot.bot.move(direction, step)
+}
+
+/**
+ * 检查是否可以到达目的地
+ *
+ * @param direction
+ * @param step
+ */
+Boxbot.prototype.checkPath = function (direction, step) {
   var offsetPosition = boxbot.bot.getOffsetPosition(direction, 1)
   var currentPosition = boxbot.bot.getCurrentPosition()
 
@@ -72,9 +119,6 @@ Boxbot.prototype.move = function (direction, step) {
       throw '无法移动到 [' + x + ',' + y + ']'
     }
   }
-
-  boxbot.bot.turn(direction)
-  boxbot.bot.move(direction, step)
 }
 
 /**
@@ -87,13 +131,15 @@ Boxbot.prototype.move = function (direction, step) {
 Boxbot.prototype.run = function (func, params) {
   var _this = this
   var promise = new Promise(function (resolve, reject) {
-    _this.queue.push({func: func, params: params, callback: function (exception) {
-      if (exception) {
-        reject(exception)
-      } else {
-        resolve()
+    _this.queue.push({
+      func: func, params: params, callback: function (exception) {
+        if (exception) {
+          reject(exception)
+        } else {
+          resolve()
+        }
       }
-    }})
+    })
   })
 
   if (!this.running) {
@@ -139,7 +185,9 @@ Boxbot.prototype.proxy = function (context, func, params) {
 var boxbot = new Boxbot()
 boxbot.bot.goto([1, 1])
 boxbot.exec('tun lef')
-boxbot.exec('tun lef')
-boxbot.exec('tun lef')
-boxbot.exec('tun lef')
 boxbot.exec('go')
+boxbot.exec('mov bot 2')
+boxbot.exec('tra rig 2')
+boxbot.exec('tun lef')
+boxbot.exec('go 4')
+boxbot.exec('tun bac')
