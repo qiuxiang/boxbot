@@ -67,8 +67,8 @@ Boxbot.prototype.commands = [
 /**
  * 解析命令，如果成功则返回命令对象，否则返回 false
  *
- * @param string
- * @returns {boolean|{handler: function, params: RegExp}}
+ * @param {string} string
+ * @returns {boolean|{handler: function, params: []}}
  */
 Boxbot.prototype.parse = function (string) {
   for (var i = 0; i < this.commands.length; i += 1) {
@@ -148,7 +148,7 @@ Boxbot.prototype.turn = function (direction) {
  */
 Boxbot.prototype.moveDirect = function (direction, step) {
   this.checkPath(direction, step)
-  boxbot.bot.move(direction, step)
+  this.bot.move(direction, step)
 }
 
 /**
@@ -159,8 +159,8 @@ Boxbot.prototype.moveDirect = function (direction, step) {
  */
 Boxbot.prototype.move = function (direction, step) {
   this.checkPath(direction, step)
-  boxbot.bot.turn(direction)
-  boxbot.bot.move(direction, step)
+  this.bot.turn(direction)
+  this.bot.move(direction, step)
 }
 
 /**
@@ -170,7 +170,7 @@ Boxbot.prototype.move = function (direction, step) {
  * @param {boolean} [turn] 是否旋转方向
  */
 Boxbot.prototype.goto = function (position, turn) {
-  boxbot.bot.goto(position, turn)
+  this.bot.goto(position, turn)
 }
 
 /**
@@ -180,9 +180,9 @@ Boxbot.prototype.goto = function (position, turn) {
  */
 Boxbot.prototype.go = function (step) {
   step = step || 1
-  var direction = boxbot.bot.getDirection()
+  var direction = this.bot.getDirection()
   this.checkPath(direction, step)
-  boxbot.bot.move(direction, step)
+  this.bot.move(direction, step)
 }
 
 /**
@@ -192,8 +192,8 @@ Boxbot.prototype.go = function (step) {
  * @param step
  */
 Boxbot.prototype.checkPath = function (direction, step) {
-  var offsetPosition = boxbot.bot.getOffsetPosition(direction, 1)
-  var currentPosition = boxbot.bot.getCurrentPosition()
+  var offsetPosition = this.bot.getOffsetPosition(direction, 1)
+  var currentPosition = this.bot.getCurrentPosition()
 
   for (var s = 1; s <= step; s += 1) {
     var x = currentPosition[0] + offsetPosition[0] * s
@@ -261,9 +261,10 @@ Boxbot.prototype.search = function (target, algorithm) {
   if (this.map.getType(target) == 'null') {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
     if (path) {
-      path.forEach(proxy(this, function (item) {
-        this.run(this.goto, [item, true])
-      }))
+      var _this = this
+      path.forEach(function (item) {
+        _this.run(_this.goto, [item, true])
+      })
     } else {
       throw '寻路失败'
     }
