@@ -71,17 +71,6 @@ BoxbotMap.prototype.setColor = function (position, color) {
  * 判断指定位置是否为空
  *
  * @param {[int]} position
- * @returns {boolean}
- */
-BoxbotMap.prototype.isNull = function (position) {
-  var box = this.get(position)
-  return box && box.dataset.type == 'null'
-}
-
-/**
- * 判断指定位置是否为空
- *
- * @param {[int]} position
  * @returns {string}
  */
 BoxbotMap.prototype.getType = function (position) {

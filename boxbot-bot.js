@@ -73,7 +73,7 @@ BoxbotBot.prototype.getOffsetPosition = function (direction, offset) {
 }
 
 /**
- * @param {int} direction
+ * @param {string} direction
  * @returns {int}
  */
 BoxbotBot.prototype.getCurrentOffset = function (direction) {
@@ -99,12 +99,14 @@ BoxbotBot.prototype.getCurrentPosition = function () {
 /**
  * 以当前位置为基准，获取指定方向上的位置
  *
- * @param {int} [direction]
+ * @param {int|null} [direction] 如果为 null 则取当前方向
  * @param {int} [offset=0]
  * @returns {[int]}
  */
 BoxbotBot.prototype.getPosition = function (direction, offset) {
-  direction = direction || this.getDirection()
+  if (direction == null) {
+    direction = this.getDirection()
+  }
   offset = offset || 0
   var offsetPosition = this.getOffsetPosition(direction, offset)
   var currentPosition = this.getCurrentPosition()

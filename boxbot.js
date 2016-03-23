@@ -47,7 +47,7 @@ Boxbot.prototype.commands = [
   {
     pattern: /^bru\s+(#\d+)$/i,
     handler: function (color) {
-      return this.run(this.paint, [color])
+      return this.run(this.setColor, [color])
     }
   }
 ]
@@ -86,7 +86,7 @@ Boxbot.prototype.build = function () {
  * 涂色
  * @param {string} color
  */
-Boxbot.prototype.paint = function (color) {
+Boxbot.prototype.setColor = function (color) {
   var position = this.bot.getPosition(null, 1)
   if (this.map.getType(position) == 'wall') {
     this.map.setColor(position, color)
@@ -128,6 +128,15 @@ Boxbot.prototype.move = function (direction, step) {
 }
 
 /**
+ * 跳到指定位置
+ *
+ * @param {[int]} position
+ */
+Boxbot.prototype.goto = function (position) {
+  boxbot.bot.goto(position)
+}
+
+/**
  * 朝当前方向移动
  *
  * @param {int} step
@@ -152,7 +161,7 @@ Boxbot.prototype.checkPath = function (direction, step) {
     var x = currentPosition[0] + offsetPosition[0] * s
     var y = currentPosition[1] + offsetPosition[1] * s
 
-    if (!this.map.isNull([x, y])) {
+    if (this.map.getType([x, y]) != 'null') {
       throw '无法移动到 [' + x + ',' + y + ']'
     }
   }
@@ -206,7 +215,39 @@ Boxbot.prototype.taskloop = function () {
 }
 
 /**
- * 提供类似 jQuery.proxy() 的功能
+ * 路径搜索，递归实现的深度优先搜索算法
+ *
+ * @param target
+ * @param path
+ * @param visited
+ * @returns {[[int]]}
+ */
+Boxbot.prototype.search = function (target, path, visited) {
+  visited = visited || {}
+  var positions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+  var current = path[path.length - 1]
+  if (current[0] == target[0] && current[1] == target[1]) {
+    return path
+  }
+
+  for (var i = 0; i < 4; i += 1) {
+    var next = [positions[i][0] + current[0], positions[i][1] + current[1]]
+    var positionKey = next[0] + '-' + next[1]
+    if (this.map.getType(next) == 'null' && !visited[positionKey]) {
+      path.push(next)
+      visited[positionKey] = next
+      var result = this.search(target, path, visited)
+      if (result) {
+        return result
+      } else {
+        path.pop()
+      }
+    }
+  }
+}
+
+/**
+ * 简易版 jQuery.proxy()
  *
  * @param {*} context
  * @param {function} func
@@ -221,15 +262,18 @@ Boxbot.prototype.proxy = function (context, func, params) {
 
 var boxbot = new Boxbot()
 boxbot.bot.goto([1, 1])
-boxbot.exec('tun lef')
-boxbot.exec('go')
-boxbot.exec('mov bot 2')
-boxbot.exec('biud')
-boxbot.exec('mov rig')
-boxbot.exec('mov bot')
-boxbot.exec('tun rig')
-boxbot.exec('bru #000')
-boxbot.exec('tra rig 2')
-boxbot.exec('tun lef')
-boxbot.exec('go 4')
-boxbot.exec('tun bac')
+boxbot.search([2,1], [boxbot.bot.getCurrentPosition()]).forEach(function (item) {
+  boxbot.run(boxbot.goto, [item])
+})
+//boxbot.exec('tun lef')
+//boxbot.exec('go')
+//boxbot.exec('mov bot 2')
+//boxbot.exec('biud')
+//boxbot.exec('mov rig')
+//boxbot.exec('mov bot')
+//boxbot.exec('tun rig')
+//boxbot.exec('bru #000')
+//boxbot.exec('tra rig 2')
+//boxbot.exec('tun lef')
+//boxbot.exec('go 4')
+//boxbot.exec('tun bac')
