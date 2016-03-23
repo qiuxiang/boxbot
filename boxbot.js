@@ -4,13 +4,13 @@
 var Boxbot = function () {
   this.bot = new BoxbotBot('.boxbot-bot')
   this.map = new BoxbotMap('.boxbot-map', 10, 10)
+  this.finder = new BoxbotFinder(this.map)
   this.duration = 500
   this.queue = []
   this.running = false
 }
 
-Boxbot.prototype.DIRECTION_MAP = {bot: BOTTOM, lef: LEFT, top: TOP, rig: RIGHT}
-
+Boxbot.prototype.directions = {bot: BOTTOM, lef: LEFT, top: TOP, rig: RIGHT}
 Boxbot.prototype.commands = [
   {
     pattern: /^go(\s+)?(\w+)?$/i,
@@ -27,14 +27,14 @@ Boxbot.prototype.commands = [
   {
     pattern: /^mov\s+(bot|lef|top|rig)(\s+)?(\w+)?$/i,
     handler: function () {
-      var direction = this.DIRECTION_MAP[arguments[0].toLowerCase()]
+      var direction = this.directions[arguments[0].toLowerCase()]
       return this.run(this.move, [direction, arguments[2] || 1])
     }
   },
   {
     pattern: /^tra\s+(bot|lef|top|rig)(\s+)?(\w+)?$/i,
     handler: function () {
-      var direction = this.DIRECTION_MAP[arguments[0].toLowerCase()]
+      var direction = this.directions[arguments[0].toLowerCase()]
       return this.run(this.moveDirect, [direction, arguments[2] || 1])
     }
   },
@@ -48,6 +48,12 @@ Boxbot.prototype.commands = [
     pattern: /^bru\s+(#\d+)$/i,
     handler: function (color) {
       return this.run(this.setColor, [color])
+    }
+  },
+  {
+    pattern: /^mov\s+to\s+(\d+)[, ](\d+)(\s+)?(dfs)?$/i,
+    handler: function (x, y) {
+      return this.search([parseInt(x), parseInt(y)])
     }
   }
 ]
@@ -175,9 +181,8 @@ Boxbot.prototype.checkPath = function (direction, step) {
  * @return Promise
  */
 Boxbot.prototype.run = function (func, params) {
-  var _this = this
-  var promise = new Promise(function (resolve, reject) {
-    _this.queue.push({
+  var promise = new Promise(this.proxy(this, function (resolve, reject) {
+    this.queue.push({
       func: func, params: params, callback: function (exception) {
         if (exception) {
           reject(exception)
@@ -186,7 +191,7 @@ Boxbot.prototype.run = function (func, params) {
         }
       }
     })
-  })
+  }))
 
   if (!this.running) {
     this.taskloop()
@@ -215,56 +220,21 @@ Boxbot.prototype.taskloop = function () {
 }
 
 /**
- * @param {[int]} distance 目标距离
- * @returns {[{weight: int, position: [int]}]}
- */
-Boxbot.prototype.createPositionsWithWeight = function (distance) {
-  var positions = [
-    {position: [0, 1]}, {position: [-1, 0]}, {position: [0, -1]}, {position: [1, 0]}
-  ].map(function (item) {
-    item.weight = item.position[0] * distance[0] + item.position[1] * distance[1]
-    return item
-  })
-
-  positions.sort(function (a, b) {
-    return b.weight - a.weight
-  })
-
-  return positions
-}
-
-/**
- * 路径搜索，递归实现的深度优先搜索算法
+ * 指定搜索算法并开始搜索
  *
- * @param target
- * @param path
- * @param visited
- * @returns {[[int]]}
+ * @param {[int]} target
+ * @param {string} [algorithm=dfs]
  */
-Boxbot.prototype.search = function (target, path, visited) {
-  visited = visited || {}
-
-  var current = path[path.length - 1]
-  if (current[0] == target[0] && current[1] == target[1]) {
-    return path
-  }
-
-  var positions = this.createPositionsWithWeight([target[0] - current[0], target[1] - current[1]])
-  for (var i = 0; i < positions.length; i += 1) {
-    var next = [positions[i].position[0] + current[0], positions[i].position[1] + current[1]]
-    var positionKey = next[0] + '-' + next[1]
-
-    if (this.map.getType(next) == 'null' && !visited[positionKey]) {
-      path.push(next)
-      visited[positionKey] = next
-
-      var result = this.search(target, path, visited)
-      if (result) {
-        return result
-      }
-
-      path.pop()
+Boxbot.prototype.search = function (target, algorithm) {
+  if (this.map.getType(target) == 'null') {
+    var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
+    if (path) {
+      path.forEach(this.proxy(this, function (item) {
+        this.run(this.goto, [item])
+      }))
     }
+  } else {
+    throw '无法移动到 [' + target[0] + ',' + target[1] + ']'
   }
 }
 
@@ -278,6 +248,9 @@ Boxbot.prototype.search = function (target, path, visited) {
  */
 Boxbot.prototype.proxy = function (context, func, params) {
   return function () {
+    if (arguments.length > 0) {
+      params = arguments
+    }
     func.apply(context, params)
   }
 }
@@ -300,9 +273,7 @@ boxbot.map.set([6, 4], 'wall')
 boxbot.map.set([7, 4], 'wall')
 boxbot.map.set([8, 4], 'wall')
 boxbot.map.set([9, 4], 'wall')
-boxbot.search([6, 7], [boxbot.bot.getCurrentPosition()]).forEach(function (item) {
-  boxbot.run(boxbot.goto, [item])
-})
+boxbot.exec('mov to 6,7')
 //boxbot.exec('tun lef')
 //boxbot.exec('go')
 //boxbot.exec('mov bot 2')
