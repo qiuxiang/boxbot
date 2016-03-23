@@ -1,3 +1,8 @@
+var BOTTOM = 0
+var LEFT = 90
+var TOP = 180
+var RIGHT = 270
+
 /**
  * @constructor
  * @param {string} selector
@@ -7,32 +12,19 @@ var BoxbotBot = function (selector) {
 }
 
 /**
- * 方向转换成角度
- *
- * @param {string} direction
- * @returns {int}
- */
-BoxbotBot.prototype.direction2angle = function (direction) {
-  return {'bottom': 0, 'left': 90, 'top': 180, 'right': -90}[direction]
-}
-
-/**
- * 角度转换成方向
- *
- * @param {int} angle
- * @returns {string}
- */
-BoxbotBot.prototype.angle2direction = function (angle) {
-  return {'0': 'bottom', '90': 'left', '180': 'top', '-90': 'right'}[angle]
-}
-
-/**
  * 转换方向
  *
  * @param {string} direction
  */
 BoxbotBot.prototype.turn = function (direction) {
-  this.element.style.transform = 'rotate(' + this.direction2angle(direction) + 'deg)'
+  var ROTATE_MAP = {
+    0: {0:0, 90: 90, 180: 180, 270: -90},
+    90: {90: 0, 180: 90, 270: 180, 0: -90},
+    180: {180: 0, 270: 90, 0: 180, 90: -90},
+    270: {270: 0, 0: 90, 90: 180, 180: -90}
+  }
+  this.element.style.transform = 'rotate(' +
+    (this.getAngle() + ROTATE_MAP[this.getDirection()][direction]) + 'deg)'
 }
 
 /**
@@ -61,10 +53,11 @@ BoxbotBot.prototype.rotate = function (angle) {
 /**
  * 获取当前方向
  *
- * @return {string}
+ * @return {int}
  */
 BoxbotBot.prototype.getDirection = function () {
-  return this.angle2direction(this.getAngle())
+  var angle = this.getAngle() % 360
+  return angle >= 0 ? angle : angle + 360
 }
 
 /**
@@ -75,7 +68,7 @@ BoxbotBot.prototype.getDirection = function () {
  * @returns {[int]}
  */
 BoxbotBot.prototype.getOffsetPosition = function (direction, offset) {
-  var position = {'bottom': [0, 1], 'left': [-1, 0], 'top': [0, -1], 'right': [1, 0]}[direction]
+  var position = {0: [0, 1], 90: [-1, 0], 180: [0, -1], 270: [1, 0]}[direction]
   return [position[0] * offset, position[1] * offset]
 }
 

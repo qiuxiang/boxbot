@@ -14,7 +14,7 @@ Boxbot.prototype.commands = [
     pattern: /^go(\s+)?(\w+)?$/i,
     handler: function (step) {
       step = arguments[1] || 1
-      return this.run(this.move, [this.bot.getDirection(), step])
+      return this.run(this.move, [null, step])
     }
   },
   {
@@ -59,12 +59,14 @@ Boxbot.prototype.turn = function (angle) {
  * @param {int} step
  */
 Boxbot.prototype.move = function (direction, step) {
-  var unitOffsetPosition = boxbot.bot.getOffsetPosition(direction, 1)
+  direction = direction || boxbot.bot.getDirection()
+
+  var offsetPosition = boxbot.bot.getOffsetPosition(direction, 1)
   var currentPosition = boxbot.bot.getCurrentPosition()
 
   for (var s = 1; s <= step; s += 1) {
-    var x = currentPosition[0] + unitOffsetPosition[0] * s
-    var y = currentPosition[1] + unitOffsetPosition[1] * s
+    var x = currentPosition[0] + offsetPosition[0] * s
+    var y = currentPosition[1] + offsetPosition[1] * s
 
     if (!this.map.isNull([x, y])) {
       throw '无法移动到 [' + x + ',' + y + ']'
@@ -140,3 +142,4 @@ boxbot.exec('tun lef')
 boxbot.exec('tun lef')
 boxbot.exec('tun lef')
 boxbot.exec('tun lef')
+boxbot.exec('go')
