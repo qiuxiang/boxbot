@@ -37,6 +37,18 @@ Boxbot.prototype.commands = [
       var direction = this.DIRECTION_MAP[arguments[0].toLowerCase()]
       return this.run(this.moveDirect, [direction, arguments[2] || 1])
     }
+  },
+  {
+    pattern: /^biud$/i,
+    handler: function () {
+      return this.run(this.build, [])
+    }
+  },
+  {
+    pattern: /^bru\s+(#\d+)$/i,
+    handler: function (color) {
+      return this.run(this.paint, [color])
+    }
   }
 ]
 
@@ -59,6 +71,31 @@ Boxbot.prototype.exec = function (string) {
 }
 
 /**
+ * 修墙
+ */
+Boxbot.prototype.build = function () {
+  var position = this.bot.getPosition(null, 1)
+  if (this.map.getType(position) == 'null') {
+    this.map.set(position, 'wall')
+  } else {
+    throw '前方不可修墙'
+  }
+}
+
+/**
+ * 涂色
+ * @param {string} color
+ */
+Boxbot.prototype.paint = function (color) {
+  var position = this.bot.getPosition(null, 1)
+  if (this.map.getType(position) == 'wall') {
+    this.map.setColor(position, color)
+  } else {
+    throw '前方没有墙'
+  }
+}
+
+/**
  * 旋转
  *
  * @param {int} angle
@@ -70,7 +107,7 @@ Boxbot.prototype.turn = function (angle) {
 /**
  * 朝指定方向移动
  *
- * @param {string} direction
+ * @param {int} direction
  * @param {int} step
  */
 Boxbot.prototype.moveDirect = function (direction, step) {
@@ -81,7 +118,7 @@ Boxbot.prototype.moveDirect = function (direction, step) {
 /**
  * 朝指定方向旋转并移动
  *
- * @param {string} direction
+ * @param {int} direction
  * @param {int} step
  */
 Boxbot.prototype.move = function (direction, step) {
@@ -187,6 +224,11 @@ boxbot.bot.goto([1, 1])
 boxbot.exec('tun lef')
 boxbot.exec('go')
 boxbot.exec('mov bot 2')
+boxbot.exec('biud')
+boxbot.exec('mov rig')
+boxbot.exec('mov bot')
+boxbot.exec('tun rig')
+boxbot.exec('bru #000')
 boxbot.exec('tra rig 2')
 boxbot.exec('tun lef')
 boxbot.exec('go 4')

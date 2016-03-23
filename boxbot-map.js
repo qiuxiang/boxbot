@@ -58,6 +58,16 @@ BoxbotMap.prototype.set = function (position, type) {
 }
 
 /**
+ * 设置指定位置的方块颜色
+ *
+ * @param {[int]} position
+ * @param color
+ */
+BoxbotMap.prototype.setColor = function (position, color) {
+  this.get(position).style.backgroundColor = color
+}
+
+/**
  * 判断指定位置是否为空
  *
  * @param {[int]} position
@@ -66,4 +76,15 @@ BoxbotMap.prototype.set = function (position, type) {
 BoxbotMap.prototype.isNull = function (position) {
   var box = this.get(position)
   return box && box.dataset.type == 'null'
+}
+
+/**
+ * 判断指定位置是否为空
+ *
+ * @param {[int]} position
+ * @returns {string}
+ */
+BoxbotMap.prototype.getType = function (position) {
+  var box = this.get(position)
+  return box && box.dataset.type
 }
