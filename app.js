@@ -17,10 +17,14 @@ Application.prototype.hotkey = function (event) {
     var direction = {37: LEFT, 38: TOP, 39: RIGHT, 40: BOTTOM}[event.keyCode]
     if (typeof direction != 'undefined') {
       if (direction == this.boxbot.bot.getDirection()) {
-        this.boxbot.run(this.boxbot.go)
+        this.boxbot.run(this.boxbot.go).catch(function (e) {
+          console.log(e)
+        })
       } else {
         this.boxbot.run(this.boxbot.turn, [direction])
       }
+    } else if (event.keyCode == 32) {
+      this.boxbot.run(this.boxbot.build)
     }
   }
 }
@@ -53,7 +57,19 @@ Application.prototype.run = function () {
 }
 
 Application.prototype.random = function () {
+  // 先找出所有可修墙的位置
   var positions = []
+  for (var y = 1; y <= this.boxbot.map.rows; y += 1) {
+    for (var x = 1; x <= this.boxbot.map.columns; x += 1) {
+      if (this.boxbot.map.getType([x, y]) == 'null') {
+        positions.push([x, y])
+      }
+    }
+  }
+
+  if (positions.length) {
+    this.boxbot.build(positions[Math.floor(Math.random() * positions.length)])
+  }
 }
 
 Application.prototype.reset = function () {

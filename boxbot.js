@@ -99,9 +99,10 @@ Boxbot.prototype.exec = function (string) {
 
 /**
  * 修墙
+ * @param {[int]} [position]
  */
-Boxbot.prototype.build = function () {
-  var position = this.bot.getPosition(null, 1)
+Boxbot.prototype.build = function (position) {
+  position = position || this.bot.getPosition(null, 1)
   if (this.map.getType(position) == 'null') {
     this.map.set(position, 'wall')
   } else {

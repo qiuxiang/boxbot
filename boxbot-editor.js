@@ -7,10 +7,12 @@ var BoxbotEditor = function (selector) {
   this.$lines = this.element.querySelector('.commander-lines')
   this.$textarea = this.element.querySelector('.commander-editor')
   this.$textarea.addEventListener('input', proxy(this, this.updateLines))
-  this.$textarea.addEventListener('scroll', proxy(this, function (event) {
-    this.$lines.style.top = -event.target.scrollTop + 'px'
-  }))
+  this.$textarea.addEventListener('scroll', proxy(this, this.scroll))
   this.updateLines()
+}
+
+BoxbotEditor.prototype.scroll = function (event) {
+  this.$lines.style.top = -event.target.scrollTop + 'px'
 }
 
 BoxbotEditor.prototype.updateLines = function () {
