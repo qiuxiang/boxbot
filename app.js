@@ -52,6 +52,7 @@ Application.prototype.run = function () {
 }
 
 Application.prototype.reset = function () {
+  this.boxbot.queue = []
   this.boxbot.bot.turn(BOTTOM)
   this.boxbot.bot.goto([1, 1])
   this.editor.clearFlags()
