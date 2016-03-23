@@ -117,8 +117,22 @@ BoxbotBot.prototype.getPosition = function (direction, offset) {
  * 跳到指定位置
  *
  * @param {[int]} position
+ * @param {boolean} [turn] 是否旋转方向
  */
-BoxbotBot.prototype.goto = function (position) {
+BoxbotBot.prototype.goto = function (position, turn) {
+  if (turn) {
+    var currentPosition = this.getCurrentPosition()
+    var distance = [position[0] - currentPosition[0], position[1] - currentPosition[1]]
+    if (distance[0] < 0) {
+      this.turn(LEFT)
+    } else if (distance[0] > 0) {
+      this.turn(RIGHT)
+    } else if (distance[1] < 0) {
+      this.turn(TOP)
+    } else {
+      this.turn(BOTTOM)
+    }
+  }
   this.element.style.left = position[0] * this.element.clientWidth + 'px'
   this.element.style.top = position[1] * this.element.clientHeight + 'px'
 }

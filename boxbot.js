@@ -5,7 +5,7 @@ var Boxbot = function () {
   this.bot = new BoxbotBot('.boxbot-bot')
   this.map = new BoxbotMap('.boxbot-map', 10, 10)
   this.finder = new BoxbotFinder(this.map)
-  this.duration = 500
+  this.duration = 250
   this.queue = []
   this.running = false
 }
@@ -54,7 +54,6 @@ Boxbot.prototype.commands = [
     pattern: /^mov\s+to\s+(\d+)[, ](\d+)(\s+)?(dfs)?$/i,
     handler: function (x, y) {
       return this.run(this.search, [[parseInt(x), parseInt(y)]])
-      //return this.search([parseInt(x), parseInt(y)])
     }
   }
 ]
@@ -138,9 +137,10 @@ Boxbot.prototype.move = function (direction, step) {
  * 跳到指定位置
  *
  * @param {[int]} position
+ * @param {boolean} [turn] 是否旋转方向
  */
-Boxbot.prototype.goto = function (position) {
-  boxbot.bot.goto(position)
+Boxbot.prototype.goto = function (position, turn) {
+  boxbot.bot.goto(position, turn)
 }
 
 /**
@@ -231,7 +231,7 @@ Boxbot.prototype.search = function (target, algorithm) {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
     if (path) {
       path.forEach(this.proxy(this, function (item) {
-        this.run(this.goto, [item])
+        this.run(this.goto, [item, true])
       }))
     } else {
       throw '寻路失败'
