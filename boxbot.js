@@ -19,7 +19,7 @@ Boxbot.prototype.commands = [
     }
   },
   {
-    pattern: /^go\s+to\s+(\d+)[, ](\d+)$/i,
+    pattern: /^go\s+to\s+(\d+)[,\s+](\d+)$/i,
     handler: function (x, y) {
       return this.run(this.goto, [[x, y]])
     }
@@ -57,7 +57,7 @@ Boxbot.prototype.commands = [
     }
   },
   {
-    pattern: /^mov\s+to\s+(\d+)[, ](\d+)(\s+)?(dfs)?$/i,
+    pattern: /^mov\s+to\s+(\d+)[,\s+](\d+)(\s+)?(dfs)?$/i,
     handler: function (x, y) {
       return this.run(this.search, [[parseInt(x), parseInt(y)]])
     }
@@ -68,7 +68,7 @@ Boxbot.prototype.commands = [
  * 解析命令，如果成功则返回命令对象，否则返回 false
  *
  * @param {string} string
- * @returns {boolean|{handler: function, params: []}}
+ * @returns {boolean|{handler: handler, params: []}}
  */
 Boxbot.prototype.parse = function (string) {
   for (var i = 0; i < this.commands.length; i += 1) {
@@ -86,7 +86,7 @@ Boxbot.prototype.parse = function (string) {
  * 运行命令
  *
  * @param {string} string
- * @returns {*}
+ * @returns {boolean|Promise}
  */
 Boxbot.prototype.exec = function (string) {
   var command = this.parse(string)
@@ -97,6 +97,11 @@ Boxbot.prototype.exec = function (string) {
   }
 }
 
+/**
+ * 设置命令运行与动画的延时
+ * 
+ * @param {int} duration 单位为毫秒
+ */
 Boxbot.prototype.setDuration = function (duration) {
   this.duration = duration
   var boxs = document.querySelectorAll('.boxbot-box')
@@ -107,6 +112,7 @@ Boxbot.prototype.setDuration = function (duration) {
 
 /**
  * 修墙
+ * 
  * @param {[int]} [position]
  */
 Boxbot.prototype.build = function (position) {
@@ -120,6 +126,7 @@ Boxbot.prototype.build = function (position) {
 
 /**
  * 涂色
+ * 
  * @param {string} color
  * @param {[int]} [position]
  */

@@ -28,7 +28,7 @@ Application.prototype.setDuration = function () {
 
 Application.prototype.loadImage = function () {
   this.imageReader
-    .load(this.$image, this.boxbot.map.columns, this.boxbot.map.rows)
+    .read(this.$image, this.boxbot.map.columns, this.boxbot.map.rows)
     .then(proxy(this, function (data) {
       var commands = 'tun bac\ntra bot\n'
       for (var y = 1; y <= data.length; y += 1) {
