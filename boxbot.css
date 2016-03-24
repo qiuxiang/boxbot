@@ -64,6 +64,8 @@ td.boxbot-box {
 
 .boxbot-controls {
   float: right;
+  width: 440px;
+  overflow: hidden;
 }
 
 .boxbot-buttons {
