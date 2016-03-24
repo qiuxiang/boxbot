@@ -124,7 +124,7 @@ BoxbotBot.prototype.goto = function (position, turn) {
       this.turn(RIGHT)
     } else if (distance[1] < 0) {
       this.turn(TOP)
-    } else {
+    } else if (distance[1] > 0) {
       this.turn(BOTTOM)
     }
   }
