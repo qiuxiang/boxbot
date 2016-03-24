@@ -80,29 +80,34 @@ Application.prototype.hotkey = function (event) {
 
 Application.prototype.run = function () {
   this.editor.clearFlags()
+  var parseError = false
   var codes = this.editor.getCodes()
 
   // 检查命令是否有误
   for (var i = 0; i < codes.length; i += 1) {
     if (codes[i] && this.boxbot.parse(codes[i]) === false) {
-      return this.editor.setFlag(i, 'error')
+      parseError = true
+      this.editor.setFlag(i, 'error')
     }
   }
 
   // 依次运行命令
-  var _this = this
-  codes.forEach(function (code, i) {
-    if (code) {
-      _this.boxbot.exec(code).then(function () {
-        _this.editor.clearFlags()
-        _this.editor.setFlag(i, 'success')
-      }).catch(function (e) {
-        console.log(e)
-        _this.editor.clearFlags()
-        _this.editor.setFlag(i, 'warning')
-      })
-    }
-  })
+  if (!parseError) {
+    var _this = this
+    codes.forEach(function (code, i) {
+      if (code) {
+        _this.boxbot.exec(code).then(function () {
+          _this.editor.clearFlags()
+          _this.editor.setFlag(i, 'success')
+          _this.editor.scrollTo(i)
+        }).catch(function (e) {
+          console.log(e)
+          _this.editor.clearFlags()
+          _this.editor.setFlag(i, 'warning')
+        })
+      }
+    })
+  }
 }
 
 Application.prototype.random = function () {

@@ -15,6 +15,10 @@ BoxbotEditor.prototype.scroll = function (event) {
   this.$lines.style.top = -event.target.scrollTop + 'px'
 }
 
+BoxbotEditor.prototype.scrollTo = function (line) {
+  this.$textarea.scrollTop = line * 20
+}
+
 BoxbotEditor.prototype.updateLines = function () {
   var html = ''
   var codes = this.$textarea.value
