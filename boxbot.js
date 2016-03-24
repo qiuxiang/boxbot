@@ -5,7 +5,7 @@ var Boxbot = function () {
   this.bot = new BoxbotBot('.boxbot-bot')
   this.map = new BoxbotMap('.boxbot-map', 20, 20)
   this.finder = new BoxbotFinder(this.map)
-  this.duration = 10
+  this.duration = 500
   this.queue = []
   this.running = false
 }
@@ -94,6 +94,14 @@ Boxbot.prototype.exec = function (string) {
     return command.handler.apply(this, command.params)
   } else {
     return false
+  }
+}
+
+Boxbot.prototype.setDuration = function (duration) {
+  this.duration = duration
+  var boxs = document.querySelectorAll('.boxbot-box')
+  for (var i = 0; i < boxs.length; i += 1) {
+    boxs[i].style.transitionDuration = duration + 'ms'
   }
 }
 

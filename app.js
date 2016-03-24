@@ -2,17 +2,28 @@ var Application = function () {
   this.boxbot = new Boxbot()
   this.editor = new BoxbotEditor('.boxbot-commander')
   this.imageReader = new ImageReader()
-  this.$image = document.querySelector('#input-image')
+
+  this.$image = document.querySelector('#image')
+  this.$random = document.querySelector('#random')
+  this.$run= document.querySelector('#run')
+  this.$reset= document.querySelector('#reset')
+  this.$duration= document.querySelector('#duration')
+
   this.init()
   this.reset()
 }
 
 Application.prototype.init = function () {
   document.addEventListener('keydown', proxy(this, this.hotkey))
-  document.querySelector('#button-run').addEventListener('click', proxy(this, this.run))
-  document.querySelector('#button-reset').addEventListener('click', proxy(this, this.reset))
-  document.querySelector('#button-random').addEventListener('click', proxy(this, this.random))
+  this.$run.addEventListener('click', proxy(this, this.run))
+  this.$reset.addEventListener('click', proxy(this, this.reset))
+  this.$random.addEventListener('click', proxy(this, this.random))
+  this.$duration.addEventListener('change', proxy(this, this.setDuration))
   this.$image.addEventListener('change', proxy(this, this.loadImage))
+}
+
+Application.prototype.setDuration = function () {
+  this.boxbot.setDuration(this.$duration.value)
 }
 
 Application.prototype.loadImage = function () {

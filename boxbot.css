@@ -14,7 +14,7 @@ body {
   width: 30px;
   height: 30px;
   box-sizing: border-box;
-  transition: all ease-in-out .01s;
+  transition: all ease-in-out .5s;
 }
 
 .boxbot-bot {
@@ -73,7 +73,7 @@ td.boxbot-box {
   font-family: Menlo, Consolas, monospace;
   line-height: 20px;
   height: 100%;
-  color: #fff;
+  color: #ecf0f1;
 }
 
 .commander-lines-wrapper {
@@ -84,6 +84,7 @@ td.boxbot-box {
   text-align: right;
   padding-top: 5px;
   box-sizing: border-box;
+  cursor: default;
 }
 
 .commander-lines {
