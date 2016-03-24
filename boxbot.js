@@ -277,7 +277,8 @@ Boxbot.prototype.taskloop = function () {
 Boxbot.prototype.search = function (target, algorithm) {
   if (this.map.getType(target) == 'null') {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
-    if (path) {
+    if (path && path.length > 1) {
+      path.shift()
       path.forEach(proxy(this, function (item) {
         this.run(this.goto, [item, true])
       }))
