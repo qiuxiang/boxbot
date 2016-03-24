@@ -19,7 +19,7 @@ BoxbotBot.prototype.turn = function (direction) {
     270: {270: 0, 0: 90, 90: 180, 180: -90}
   }
   this.element.style.transform = 'rotate(' +
-    (this.getAngle() + ROTATE_MAP[this.getDirection()][direction]) + 'deg)'
+    (this.getCurrentAngle() + ROTATE_MAP[this.getCurrentDirection()][direction]) + 'deg)'
 }
 
 /**
@@ -27,7 +27,7 @@ BoxbotBot.prototype.turn = function (direction) {
  *
  * @return {int}
  */
-BoxbotBot.prototype.getAngle = function () {
+BoxbotBot.prototype.getCurrentAngle = function () {
   var match = this.element.style.transform.match(/rotate\((.*)deg\)/)
   if (match) {
     return parseInt(match[1])
@@ -42,7 +42,7 @@ BoxbotBot.prototype.getAngle = function () {
  * @param {int} angle
  */
 BoxbotBot.prototype.rotate = function (angle) {
-  this.element.style.transform = 'rotate(' + (this.getAngle() + angle) + 'deg)'
+  this.element.style.transform = 'rotate(' + (this.getCurrentAngle() + angle) + 'deg)'
 }
 
 /**
@@ -50,8 +50,8 @@ BoxbotBot.prototype.rotate = function (angle) {
  *
  * @return {int}
  */
-BoxbotBot.prototype.getDirection = function () {
-  var angle = this.getAngle() % 360
+BoxbotBot.prototype.getCurrentDirection = function () {
+  var angle = this.getCurrentAngle() % 360
   return angle >= 0 ? angle : angle + 360
 }
 
@@ -100,7 +100,7 @@ BoxbotBot.prototype.getCurrentPosition = function () {
  */
 BoxbotBot.prototype.getPosition = function (direction, offset) {
   if (direction == null) {
-    direction = this.getDirection()
+    direction = this.getCurrentDirection()
   }
   offset = offset || 0
   var offsetPosition = this.getOffsetPosition(direction, offset)

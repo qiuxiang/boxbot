@@ -65,7 +65,7 @@ Application.prototype.hotkey = function (event) {
   if (event.target.tagName == 'BODY') {
     var direction = {37: LEFT, 38: TOP, 39: RIGHT, 40: BOTTOM}[event.keyCode]
     if (typeof direction != 'undefined') {
-      if (direction == this.boxbot.bot.getDirection()) {
+      if (direction == this.boxbot.bot.getCurrentDirection()) {
         this.boxbot.run(this.boxbot.go).catch(function (e) {
           console.log(e)
         })

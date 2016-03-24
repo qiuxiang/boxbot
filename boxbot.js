@@ -197,7 +197,7 @@ Boxbot.prototype.goto = function (position, turn) {
  */
 Boxbot.prototype.go = function (step) {
   step = step || 1
-  var direction = this.bot.getDirection()
+  var direction = this.bot.getCurrentDirection()
   this.checkPath(direction, step)
   this.bot.move(direction, step)
 }
