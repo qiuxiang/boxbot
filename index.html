@@ -15,15 +15,15 @@
   <article class="boxbot-controls">
     <article class="boxbot-buttons">
       <select title="时间间隔" id="duration">
-        <option value="1000">慢速</option>
-        <option value="500" selected>常速</option>
+        <option value="500">慢速</option>
+        <option value="250" selected>常速</option>
         <option value="100">快速</option>
         <option value="10">极快</option>
       </select>
       <button id="run" type="button">运行</button>
       <button id="reset" type="button">重置</button>
       <button id="random" type="button">随机修墙</button>
-      <input type="file" id="image" title="s" style="width: 200px">
+      <input type="file" id="image" title="s" style="width: 220px">
     </article>
     <article class="boxbot-commander">
       <div class="commander-lines-wrapper">
@@ -35,10 +35,18 @@
 tun lef
 go
 tun bac
-tra bot 4</textarea>
+tra bot 4
+mov rig 6
+biud
+mov bot
+mov rig
+tun lef
+bru #2980b9
+mov to 9,6</textarea>
     </article>
   </article>
 </article>
+<p class="note"><em>注：右上方选择图片文件，应用会生成绘图命令，接着运行命令，机器人会把图形画出来！</em></p>
 <script src="utils.js"></script>
 <script src="boxbot-bot.js"></script>
 <script src="boxbot-map.js"></script>

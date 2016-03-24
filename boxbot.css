@@ -9,11 +9,17 @@ body {
   position: relative;
 }
 
+.boxbot:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
 .boxbot-box {
   width: 30px;
   height: 30px;
   box-sizing: border-box;
-  transition: all ease-in-out .5s;
+  transition: all ease-in-out .25s;
 }
 
 .boxbot-bot {
@@ -118,4 +124,9 @@ td.boxbot-box {
   outline: none;
   padding: 5px;
   background-color: #34495e;
+}
+
+.note {
+  margin-top: 20px;
+  color: #999;
 }
