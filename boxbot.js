@@ -3,9 +3,9 @@
  */
 var Boxbot = function () {
   this.bot = new BoxbotBot('.boxbot-bot')
-  this.map = new BoxbotMap('.boxbot-map', 10, 10)
+  this.map = new BoxbotMap('.boxbot-map', 20, 20)
   this.finder = new BoxbotFinder(this.map)
-  this.duration = 250
+  this.duration = 10
   this.queue = []
   this.running = false
 }
@@ -51,7 +51,7 @@ Boxbot.prototype.commands = [
     }
   },
   {
-    pattern: /^bru\s+(#\d+)$/i,
+    pattern: /^bru\s+(#\w+)$/i,
     handler: function (color) {
       return this.run(this.setColor, [color])
     }
@@ -113,9 +113,10 @@ Boxbot.prototype.build = function (position) {
 /**
  * 涂色
  * @param {string} color
+ * @param {[int]} [position]
  */
-Boxbot.prototype.setColor = function (color) {
-  var position = this.bot.getPosition(null, 1)
+Boxbot.prototype.setColor = function (color, position) {
+  position = position || this.bot.getPosition(null, 1)
   if (this.map.getType(position) == 'wall') {
     this.map.setColor(position, color)
   } else {
@@ -262,10 +263,9 @@ Boxbot.prototype.search = function (target, algorithm) {
   if (this.map.getType(target) == 'null') {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
     if (path) {
-      var _this = this
-      path.forEach(function (item) {
-        _this.run(_this.goto, [item, true])
-      })
+      path.forEach(proxy(this, function (item) {
+        this.run(this.goto, [item, true])
+      }))
     } else {
       throw '寻路失败'
     }

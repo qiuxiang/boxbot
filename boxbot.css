@@ -3,10 +3,10 @@
 }
 
 .boxbot-box {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   box-sizing: border-box;
-  transition: all ease-in-out .25s;
+  transition: all ease-in-out .01s;
 }
 
 .boxbot-bot {
@@ -23,7 +23,8 @@
 
 td.boxbot-box {
   border: 1px solid #ecf0f1;
-  padding: 10px;
+  padding: 5px;
+  font-size: 12px;
 }
 
 .boxbot-box[data-type="y-axis"],
@@ -69,6 +70,7 @@ td.boxbot-box {
   font-size: 14px;
   text-align: right;
   padding-top: 5px;
+  box-sizing: border-box;
 }
 
 .commander-lines {

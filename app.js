@@ -1,15 +1,53 @@
 var Application = function () {
   this.boxbot = new Boxbot()
   this.editor = new BoxbotEditor('.boxbot-commander')
+  this.imageReader = new ImageReader()
+  this.$image = document.querySelector('#input-image')
   this.init()
   this.reset()
 }
 
 Application.prototype.init = function () {
   document.addEventListener('keydown', proxy(this, this.hotkey))
-  document.querySelector('#btn-run').addEventListener('click', proxy(this, this.run))
-  document.querySelector('#btn-reset').addEventListener('click', proxy(this, this.reset))
-  document.querySelector('#btn-random').addEventListener('click', proxy(this, this.random))
+  document.querySelector('#button-run').addEventListener('click', proxy(this, this.run))
+  document.querySelector('#button-reset').addEventListener('click', proxy(this, this.reset))
+  document.querySelector('#button-random').addEventListener('click', proxy(this, this.random))
+  this.$image.addEventListener('change', proxy(this, this.loadImage))
+}
+
+Application.prototype.loadImage = function () {
+  this.imageReader
+    .load(this.$image, this.boxbot.map.columns, this.boxbot.map.rows)
+    .then(proxy(this, function (data) {
+      var commands = 'tun bac\ntra bot\n'
+      for (var y = 1; y <= data.length; y += 1) {
+        var columns = data[y - 1].length
+        for (var x = 1; x <= columns; x += 1) {
+          commands += 'biud\n'
+
+          var _x = columns - x
+          var direction = 'lef'
+
+          if (y % 2) {
+            _x = [x - 1]
+            direction = 'rig'
+          }
+
+          commands += 'bru ' + data[y - 1][_x] + '\n'
+
+          if (x != columns) {
+            commands += 'tra ' + direction + '\n'
+          }
+        }
+
+        if (y == data.length - 1) {
+          commands += 'tun rig\ntra lef\n'
+        } else {
+          commands += 'tra bot\n'
+        }
+      }
+      this.editor.setCodes(commands)
+    }))
 }
 
 Application.prototype.hotkey = function (event) {

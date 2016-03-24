@@ -50,3 +50,8 @@ BoxbotEditor.prototype.getCodes = function () {
   })
   return codes
 }
+
+BoxbotEditor.prototype.setCodes = function (codes) {
+  this.$textarea.value = codes
+  this.updateLines()
+}
