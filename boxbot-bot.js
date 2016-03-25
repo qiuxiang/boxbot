@@ -1,3 +1,8 @@
+var BOTTOM = 0
+var LEFT = 90
+var TOP = 180
+var RIGHT = 270
+
 /**
  * @constructor
  * @param {string} selector

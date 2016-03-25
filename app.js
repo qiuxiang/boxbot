@@ -14,12 +14,12 @@ var Application = function () {
 }
 
 Application.prototype.init = function () {
-  document.addEventListener('keydown', proxy(this, this.hotkey))
-  this.$run.addEventListener('click', proxy(this, this.run))
-  this.$reset.addEventListener('click', proxy(this, this.reset))
-  this.$random.addEventListener('click', proxy(this, this.random))
-  this.$duration.addEventListener('change', proxy(this, this.setDuration))
-  this.$image.addEventListener('change', proxy(this, this.loadImage))
+  document.addEventListener('keydown', this.hotkey.bind(this))
+  this.$run.addEventListener('click', this.run.bind(this))
+  this.$reset.addEventListener('click', this.reset.bind(this))
+  this.$random.addEventListener('click', this.random.bind(this))
+  this.$duration.addEventListener('change', this.setDuration.bind(this))
+  this.$image.addEventListener('change', this.loadImage.bind(this))
 }
 
 Application.prototype.setDuration = function () {
@@ -32,7 +32,7 @@ Application.prototype.setDuration = function () {
 Application.prototype.loadImage = function () {
   this.imageReader
     .read(this.$image, this.boxbot.map.columns, this.boxbot.map.rows)
-    .then(proxy(this, function (data) {
+    .then((function (data) {
       var commands = 'tun bac\ntra bot\n'
       for (var y = 1; y <= data.length; y += 1) {
         var columns = data[y - 1].length
@@ -61,12 +61,12 @@ Application.prototype.loadImage = function () {
         }
       }
       this.editor.setCodes(commands)
-    }))
+    }).bind(this))
 }
 
 /**
  * 键盘事件处理
- *
+ * 
  * @param {Event} event
  */
 Application.prototype.hotkey = function (event) {

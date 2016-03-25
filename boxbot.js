@@ -230,7 +230,7 @@ Boxbot.prototype.checkPath = function (direction, step) {
  * @return Promise
  */
 Boxbot.prototype.run = function (func, params) {
-  var promise = new Promise(proxy(this, function (resolve, reject) {
+  var promise = new Promise((function (resolve, reject) {
     this.queue.push({
       func: func, params: params, callback: function (exception) {
         if (exception) {
@@ -240,7 +240,7 @@ Boxbot.prototype.run = function (func, params) {
         }
       }
     })
-  }))
+  }).bind(this))
 
   if (!this.running) {
     this.taskloop()
@@ -262,7 +262,7 @@ Boxbot.prototype.taskloop = function () {
     }
 
     // 等待动画结束后运行下一个任务
-    setTimeout(proxy(this, this.taskloop), this.duration)
+    setTimeout(this.taskloop.bind(this), this.duration)
   } else {
     this.running = false
   }
@@ -279,9 +279,9 @@ Boxbot.prototype.search = function (target, algorithm) {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
     if (path && path.length > 1) {
       path.shift()
-      path.forEach(proxy(this, function (item) {
+      path.forEach((function (item) {
         this.run(this.goto, [item, true])
-      }))
+      }).bind(this))
     } else {
       throw '寻路失败'
     }

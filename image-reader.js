@@ -5,7 +5,7 @@ var ImageReader = function () {
   this.image = document.createElement('img')
   this.canvas = document.createElement('canvas').getContext('2d')
   this.reader = new FileReader()
-  this.reader.addEventListener('load', proxy(this, this.load))
+  this.reader.addEventListener('load', this.load.bind(this))
 }
 
 /**
@@ -20,9 +20,9 @@ ImageReader.prototype.read = function (file, width, height) {
   this.width = width
   this.height = height
   this.reader.readAsDataURL(file.files[0])
-  return new Promise(proxy(this, function (resolve) {
+  return new Promise((function (resolve) {
     this.resolve = resolve
-  }))
+  }).bind(this))
 }
 
 ImageReader.prototype.load = function () {

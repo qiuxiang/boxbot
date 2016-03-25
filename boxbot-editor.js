@@ -6,8 +6,8 @@ var BoxbotEditor = function (selector) {
   this.element = document.querySelector(selector)
   this.$lines = this.element.querySelector('.commander-lines')
   this.$textarea = this.element.querySelector('.commander-editor')
-  this.$textarea.addEventListener('input', proxy(this, this.update))
-  this.$textarea.addEventListener('scroll', proxy(this, this.scroll))
+  this.$textarea.addEventListener('input', this.update.bind(this))
+  this.$textarea.addEventListener('scroll', this.scroll.bind(this))
   this.update()
 }
 
