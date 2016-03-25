@@ -7,13 +7,13 @@
   <link rel="stylesheet" href="boxbot.css">
 </head>
 <body>
-<article class="boxbot">
+<article class="boxbot clearfix">
   <table class="boxbot-map"></table>
   <article class="boxbot-box boxbot-bot">
     <img src="bot.png" alt="bot">
   </article>
   <article class="boxbot-controls">
-    <article class="boxbot-buttons">
+    <article class="boxbot-buttons clearfix">
       <select title="时间间隔" id="duration">
         <option value="500">慢速</option>
         <option value="250" selected>常速</option>
@@ -23,7 +23,7 @@
       <button id="run" type="button">运行</button>
       <button id="reset" type="button">重置</button>
       <button id="random" type="button">随机修墙</button>
-      <input type="file" id="image" title="选择图片文件" style="width: 160px">
+      <input type="file" id="image" title="选择图片文件">
     </article>
     <article class="boxbot-commander">
       <div class="commander-lines-wrapper">

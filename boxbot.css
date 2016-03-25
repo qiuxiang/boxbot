@@ -5,14 +5,14 @@ body {
   padding-right: 10px;
 }
 
-.boxbot {
-  position: relative;
-}
-
-.boxbot:after {
+.clearfix:after {
   content: '';
   display: block;
   clear: both;
+}
+
+.boxbot {
+  position: relative;
 }
 
 .boxbot-box {
@@ -69,7 +69,23 @@ td.boxbot-box {
 }
 
 .boxbot-buttons {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.boxbot-buttons select,
+.boxbot-buttons input,
+.boxbot-buttons button {
+  height: 18px;
+  margin-right: 5px;
+  font-size: 12px;
+  box-sizing: border-box;
+  float: left;
+}
+
+.boxbot-buttons input {
+  float: right;
+  margin-right: 0;
+  width: 150px;
 }
 
 .boxbot-commander {
@@ -125,6 +141,7 @@ td.boxbot-box {
   border-radius: 0 4px 4px 0;
   outline: none;
   padding: 5px;
+  margin: 0;
   background-color: #34495e;
 }
 
