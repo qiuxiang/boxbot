@@ -33,7 +33,7 @@ Application.prototype.loadImage = function () {
   this.imageReader
     .read(this.$image, this.boxbot.map.columns, this.boxbot.map.rows)
     .then((function (data) {
-      var commands = 'tun bac\ntra bot\n'
+      var commands = 'mov to 1,1\nmov bot\ntun bac\n'
       for (var y = 1; y <= data.length; y += 1) {
         var columns = data[y - 1].length
         for (var x = 1; x <= columns; x += 1) {
