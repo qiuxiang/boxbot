@@ -277,11 +277,13 @@ Boxbot.prototype.taskloop = function () {
 Boxbot.prototype.search = function (target, algorithm) {
   if (this.map.getType(target) == 'null') {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
-    if (path && path.length > 1) {
-      path.shift()
-      path.forEach((function (item) {
-        this.run(this.goto, [item, true])
-      }).bind(this))
+    if (path) {
+      if (path.length > 1) {
+        path.shift()
+        path.forEach((function (item) {
+          this.run(this.goto, [item, true])
+        }).bind(this))
+      }
     } else {
       throw '寻路失败'
     }
