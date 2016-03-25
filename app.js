@@ -107,7 +107,7 @@ Application.prototype.run = function () {
         _this.boxbot.exec(code).then(function () {
           _this.editor.clearFlags()
           _this.editor.setFlag(i, 'success')
-          _this.editor.scrollTo(i)
+          i % 30 == 0 && _this.editor.scrollTo(i)
         }).catch(function (e) {
           console.log(e)
           _this.editor.clearFlags()
