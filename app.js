@@ -26,6 +26,9 @@ Application.prototype.setDuration = function () {
   this.boxbot.setDuration(this.$duration.value)
 }
 
+/**
+ * 读取图片并生成绘图命令
+ */
 Application.prototype.loadImage = function () {
   this.imageReader
     .read(this.$image, this.boxbot.map.columns, this.boxbot.map.rows)
@@ -61,6 +64,11 @@ Application.prototype.loadImage = function () {
     }))
 }
 
+/**
+ * 键盘事件处理
+ *
+ * @param {Event} event
+ */
 Application.prototype.hotkey = function (event) {
   if (event.target.tagName == 'BODY') {
     var direction = {37: LEFT, 38: TOP, 39: RIGHT, 40: BOTTOM}[event.keyCode]

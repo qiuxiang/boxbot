@@ -1,25 +1,38 @@
 /**
- * @param {string} selector
  * @constructor
+ * @param {string} selector
  */
 var BoxbotEditor = function (selector) {
   this.element = document.querySelector(selector)
   this.$lines = this.element.querySelector('.commander-lines')
   this.$textarea = this.element.querySelector('.commander-editor')
-  this.$textarea.addEventListener('input', proxy(this, this.updateLines))
+  this.$textarea.addEventListener('input', proxy(this, this.update))
   this.$textarea.addEventListener('scroll', proxy(this, this.scroll))
-  this.updateLines()
+  this.update()
 }
 
+/**
+ * 代码行数同步滚动
+ * 
+ * @param event
+ */
 BoxbotEditor.prototype.scroll = function (event) {
   this.$lines.style.top = -event.target.scrollTop + 'px'
 }
 
+/**
+ * 滚动到制定行数
+ * 
+ * @param line
+ */
 BoxbotEditor.prototype.scrollTo = function (line) {
   this.$textarea.scrollTop = line * 20
 }
 
-BoxbotEditor.prototype.updateLines = function () {
+/**
+ * 更新代码行数
+ */
+BoxbotEditor.prototype.update = function () {
   var html = ''
   var codes = this.$textarea.value
   var lines = codes.match(/\n/g)
@@ -32,14 +45,26 @@ BoxbotEditor.prototype.updateLines = function () {
   this.$lines.innerHTML = html
 }
 
+/**
+ * @returns {NodeList}
+ */
 BoxbotEditor.prototype.getLines = function () {
   return this.element.querySelectorAll('.commander-lines-item')
 }
 
+/**
+ * 设置标记
+ * 
+ * @param {line} line
+ * @param {string} flag
+ */
 BoxbotEditor.prototype.setFlag = function (line, flag) {
   this.getLines()[line].classList.add(flag)
 }
 
+/**
+ * 清除所有标记
+ */
 BoxbotEditor.prototype.clearFlags = function () {
   var lines = this.getLines()
   for (var i = 0; i < lines.length; i += 1) {
@@ -47,6 +72,11 @@ BoxbotEditor.prototype.clearFlags = function () {
   }
 }
 
+/**
+ * 获取代码列表
+ * 
+ * @returns {[string]}
+ */
 BoxbotEditor.prototype.getCodes = function () {
   var codes = []
   this.$textarea.value.split('\n').forEach(function (code) {
@@ -55,7 +85,12 @@ BoxbotEditor.prototype.getCodes = function () {
   return codes
 }
 
+/**
+ * 设置编辑器代码，同时触发更新
+ * 
+ * @param codes
+ */
 BoxbotEditor.prototype.setCodes = function (codes) {
   this.$textarea.value = codes
-  this.updateLines()
+  this.update()
 }

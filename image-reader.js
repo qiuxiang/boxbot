@@ -11,7 +11,7 @@ var ImageReader = function () {
 /**
  * 读取图片数据
  *
- * @param {HTMLImageElement} file
+ * @param {HTMLInputElement} file
  * @param {int} width
  * @param {int} height
  * @returns {Promise}

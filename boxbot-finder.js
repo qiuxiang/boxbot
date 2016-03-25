@@ -1,6 +1,6 @@
 /**
- * @param {BoxbotMap} map
  * @constructor
+ * @param {BoxbotMap} map
  */
 var BoxbotFinder = function (map) {
   this.map = map
@@ -40,7 +40,7 @@ BoxbotFinder.prototype.dfs = function (from, to) {
  * @param {[int]} distance 目标距离
  * @returns {[{weight: int, position: [int]}]}
  */
-BoxbotFinder.prototype.createPositionsWithWeight = function (distance) {
+BoxbotFinder.prototype.createPositions = function (distance) {
   var positions = [
     {position: [0, 1]}, {position: [-1, 0]}, {position: [0, -1]}, {position: [1, 0]}
   ].map(function (item) {
@@ -71,7 +71,7 @@ BoxbotFinder.prototype.deep_first_search = function (target, path, visited) {
     return path
   }
 
-  var positions = this.createPositionsWithWeight([target[0] - current[0], target[1] - current[1]])
+  var positions = this.createPositions([target[0] - current[0], target[1] - current[1]])
   for (var i = 0; i < positions.length; i += 1) {
     var next = [positions[i].position[0] + current[0], positions[i].position[1] + current[1]]
     var positionKey = next[0] + '-' + next[1]
