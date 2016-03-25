@@ -87,7 +87,7 @@ Application.prototype.hotkey = function (event) {
 }
 
 Application.prototype.run = function () {
-  this.editor.clearFlags()
+  this.editor.clearFlag()
   var parseError = false
   var codes = this.editor.getCodes()
 
@@ -101,20 +101,22 @@ Application.prototype.run = function () {
 
   // 依次运行命令
   if (!parseError) {
-    var _this = this
-    codes.forEach(function (code, i) {
+    var prev = 0
+    codes.forEach((function (code, i) {
       if (code) {
-        _this.boxbot.exec(code).then(function () {
-          _this.editor.clearFlags()
-          _this.editor.setFlag(i, 'success')
-          i % 30 == 0 && _this.editor.scrollTo(i)
-        }).catch(function (e) {
+        this.boxbot.exec(code).then((function () {
+          if (i % 30 == 0) {
+            this.editor.scrollTo(i)
+          }
+          this.editor.clearFlag(prev)
+          this.editor.setFlag(i, 'success')
+          prev = i
+        }).bind(this)).catch((function (e) {
           console.log(e)
-          _this.editor.clearFlags()
-          _this.editor.setFlag(i, 'warning')
-        })
+          this.editor.setFlag(i, 'warning')
+        }).bind(this))
       }
-    })
+    }).bind(this))
   }
 }
 
@@ -139,7 +141,7 @@ Application.prototype.reset = function () {
   this.boxbot.bot.turn(BOTTOM)
   this.boxbot.bot.goto([1, 1])
   this.boxbot.map.clear()
-  this.editor.clearFlags()
+  this.editor.clearFlag()
 }
 
 new Application()

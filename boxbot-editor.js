@@ -55,7 +55,7 @@ BoxbotEditor.prototype.getLines = function () {
 /**
  * 设置标记
  * 
- * @param {line} line
+ * @param {int} line
  * @param {string} flag
  */
 BoxbotEditor.prototype.setFlag = function (line, flag) {
@@ -63,12 +63,18 @@ BoxbotEditor.prototype.setFlag = function (line, flag) {
 }
 
 /**
- * 清除所有标记
+ * 清除标记
+ * 
+ * @param {int} [line] 默认清除所有标记
  */
-BoxbotEditor.prototype.clearFlags = function () {
+BoxbotEditor.prototype.clearFlag = function (line) {
   var lines = this.getLines()
-  for (var i = 0; i < lines.length; i += 1) {
-    lines[i].className = 'commander-lines-item'
+  if (line) {
+    lines[line].className = 'commander-lines-item'
+  } else {
+    for (var i = 0; i < lines.length; i += 1) {
+      lines[i].className = 'commander-lines-item'
+    }
   }
 }
 

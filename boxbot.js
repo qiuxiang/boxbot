@@ -3,7 +3,7 @@
  */
 var Boxbot = function () {
   this.bot = new BoxbotBot('.boxbot-bot')
-  this.map = new BoxbotMap('.boxbot-map', 20, 20)
+  this.map = new BoxbotMap('.boxbot-map', 30, 30)
   this.finder = new BoxbotFinder(this.map)
   this.duration = 250
   this.queue = []

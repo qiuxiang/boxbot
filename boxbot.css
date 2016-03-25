@@ -1,6 +1,6 @@
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  width: 1100px;
+  width: 1240px;
   margin: 20px auto;
   padding-right: 10px;
 }
@@ -16,8 +16,8 @@ body {
 }
 
 .boxbot-box {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   box-sizing: border-box;
   transition: all ease-in-out .25s;
 }
@@ -29,13 +29,12 @@ body {
 }
 
 .boxbot-bot img {
-  width: 29px;
-  height: 29px;
+  width: 24px;
+  height: 24px;
 }
 
 .boxbot-map {
   border-collapse: collapse;
-  width: 630px;
   float: left;
 }
 
