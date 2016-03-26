@@ -2,8 +2,10 @@
  * @constructor
  */
 var Boxbot = function () {
+  this.element = document.querySelector('.boxbot')
   this.bot = new BoxbotBot('.boxbot-bot')
-  this.map = new BoxbotMap('.boxbot-map', 30, 30)
+  this.map = new BoxbotMap('.boxbot-map')
+  this.map.create(20, 20)
   this.finder = new BoxbotFinder(this.map)
   this.duration = 250
   this.queue = []
@@ -108,6 +110,16 @@ Boxbot.prototype.setDuration = function (duration) {
   for (var i = 0; i < boxs.length; i += 1) {
     boxs[i].style.transitionDuration = duration + 'ms'
   }
+}
+
+/**
+ * 设置地图尺寸
+ *
+ * @param {int} size
+ */
+Boxbot.prototype.setResolution = function (size) {
+  this.map.create(size, size)
+  this.element.className = 'clearfix boxbot boxbot-' + size + 'x' + size
 }
 
 /**

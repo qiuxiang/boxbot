@@ -8,6 +8,7 @@ var Application = function () {
   this.$run= document.querySelector('#run')
   this.$reset= document.querySelector('#reset')
   this.$duration= document.querySelector('#duration')
+  this.$resolution= document.querySelector('#resolution')
 
   this.init()
   this.reset()
@@ -19,11 +20,17 @@ Application.prototype.init = function () {
   this.$reset.addEventListener('click', this.reset.bind(this))
   this.$random.addEventListener('click', this.random.bind(this))
   this.$duration.addEventListener('change', this.setDuration.bind(this))
+  this.$resolution.addEventListener('change', this.setResolution.bind(this))
   this.$image.addEventListener('change', this.loadImage.bind(this))
 }
 
 Application.prototype.setDuration = function () {
-  this.boxbot.setDuration(this.$duration.value)
+  this.boxbot.setDuration(parseInt(this.$duration.value))
+}
+
+Application.prototype.setResolution = function () {
+  this.boxbot.setResolution(parseInt(this.$resolution.value))
+  this.reset()
 }
 
 /**
@@ -142,9 +149,8 @@ Application.prototype.random = function () {
 
 Application.prototype.reset = function () {
   this.boxbot.queue = []
-  this.boxbot.bot.turn(BOTTOM)
-  this.boxbot.bot.goto([1, 1])
   this.boxbot.map.clear()
+  this.boxbot.bot.init()
   this.editor.clearFlag()
 }
 

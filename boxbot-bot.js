@@ -9,6 +9,13 @@ var RIGHT = 270
  */
 var BoxbotBot = function (selector) {
   this.element = document.querySelector(selector)
+  this.init()
+}
+
+BoxbotBot.prototype.init = function () {
+  this.element.style.left = this.element.clientWidth + 'px'
+  this.element.style.top = this.element.clientHeight + 'px'
+  this.element.style.transform = 'rotate(0edg)'
 }
 
 /**

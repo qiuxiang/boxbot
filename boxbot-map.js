@@ -1,24 +1,22 @@
 /**
  * @constructor
  * @param {string} selector
- * @param {int} columns
- * @param {int} rows
  */
-var BoxbotMap = function (selector, columns, rows) {
+var BoxbotMap = function (selector) {
   this.element = document.querySelector(selector)
-  this.columns = columns
-  this.rows = rows
-  this.init()
 }
 
 /**
- * 初始化，生成地图
+ * 创建地图
+ * 
+ * @param {int} columns
+ * @param {int} rows
  */
-BoxbotMap.prototype.init = function () {
+BoxbotMap.prototype.create = function (columns, rows) {
   var html = ''
-  for (var y = 0; y <= this.rows; y += 1) {
+  for (var y = 0; y <= rows; y += 1) {
     html += '<tr>'
-    for (var x = 0; x <= this.columns; x += 1) {
+    for (var x = 0; x <= columns; x += 1) {
       if (x == 0 && y == 0) {
         html += '<td></td>'
       } else {
@@ -33,10 +31,15 @@ BoxbotMap.prototype.init = function () {
     }
     html += '</tr>'
   }
+  this.columns = columns
+  this.rows = rows
   this.element.innerHTML = html
   this.boxs = this.element.getElementsByTagName('td')
 }
 
+/**
+ * 清除地图数据
+ */
 BoxbotMap.prototype.clear = function () {
   for (var y = 1; y <= this.rows; y += 1) {
     for (var x = 1; x <= this.columns; x += 1) {

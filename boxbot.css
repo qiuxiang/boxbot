@@ -16,10 +16,11 @@ body {
 }
 
 .boxbot-box {
-  width: 25px;
-  height: 25px;
+  width: 37px;
+  height: 37px;
   box-sizing: border-box;
-  transition: all ease-in-out .25s;
+  transition-property: left, top, transform;
+  transition-duration: .25s;
 }
 
 .boxbot-bot {
@@ -29,8 +30,8 @@ body {
 }
 
 .boxbot-bot img {
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
 }
 
 .boxbot-map {
@@ -68,7 +69,7 @@ td.boxbot-box {
 }
 
 .boxbot-buttons {
-  margin-bottom: 12px;
+  margin: 7px 0 12px 0;
 }
 
 .boxbot-buttons select,
@@ -88,7 +89,7 @@ td.boxbot-box {
 }
 
 .boxbot-commander {
-  height: 600px;
+  height: 741px;
   overflow: hidden;
 }
 
@@ -147,4 +148,22 @@ td.boxbot-box {
 .note {
   margin-top: 20px;
   color: #999;
+}
+
+.boxbot-30x30 .boxbot-commander {
+  height: 751px;
+}
+
+.boxbot-30x30 .boxbot-buttons {
+  margin: 0 0 7px 0;
+}
+
+.boxbot-30x30 .boxbot-box {
+  width: 25px;
+  height: 25px;
+}
+
+.boxbot-30x30 .boxbot-bot img {
+  width: 24px;
+  height: 24px;
 }
