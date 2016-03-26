@@ -73,7 +73,9 @@ BoxbotBot.prototype.getOffsetPosition = function (direction, offset) {
 }
 
 /**
- * @param {string} direction
+ * 获取当前位置便宜量
+ * 
+ * @param {string} direction left|top
  * @returns {int}
  */
 BoxbotBot.prototype.getCurrentOffset = function (direction) {

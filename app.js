@@ -33,11 +33,21 @@ Application.prototype.loadImage = function () {
   this.imageReader
     .read(this.$image, this.boxbot.map.columns, this.boxbot.map.rows)
     .then((function (data) {
-      var commands = 'mov to 1,1\nmov bot\ntun bac\n'
+      var commands = 'mov to 1,1\nmov bot\nmov top\n'
       for (var y = 1; y <= data.length; y += 1) {
+        // 移动到下一个位置
+        if (y == data.length) {
+          commands += 'tun rig\ntra lef\n'
+        } else {
+          commands += 'tra bot\n'
+        }
+
         var columns = data[y - 1].length
         for (var x = 1; x <= columns; x += 1) {
-          commands += 'biud\n'
+          // 最后一个方块无法修墙，结束绘图
+          if (y == data.length && x == columns) {
+            break
+          }
 
           var _x = columns - x
           var direction = 'lef'
@@ -47,17 +57,10 @@ Application.prototype.loadImage = function () {
             direction = 'rig'
           }
 
-          commands += 'bru ' + data[y - 1][_x] + '\n'
-
-          if (x != columns) {
+          if (x != 1) {
             commands += 'tra ' + direction + '\n'
           }
-        }
-
-        if (y == data.length - 1) {
-          commands += 'tun rig\ntra lef\n'
-        } else {
-          commands += 'tra bot\n'
+          commands += 'biud\nbru ' + data[y - 1][_x] + '\n'
         }
       }
       this.editor.setCodes(commands)
@@ -113,6 +116,7 @@ Application.prototype.run = function () {
           prev = i
         }).bind(this)).catch((function (e) {
           console.log(e)
+          this.editor.clearFlag(prev)
           this.editor.setFlag(i, 'warning')
         }).bind(this))
       }
