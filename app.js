@@ -115,7 +115,7 @@ Application.prototype.run = function () {
     codes.forEach((function (code, i) {
       if (code) {
         this.boxbot.exec(code).then((function () {
-          if (i % 30 == 0) {
+          if (i % 37 == 0) {
             this.editor.scrollTo(i)
           }
           this.editor.clearFlag(prev)
