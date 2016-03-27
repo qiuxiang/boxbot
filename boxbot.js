@@ -15,7 +15,7 @@ var Boxbot = function () {
 Boxbot.prototype.directions = {bot: BOTTOM, lef: LEFT, top: TOP, rig: RIGHT}
 Boxbot.prototype.commands = [
   {
-    pattern: /^go(\s+)?(\w+)?$/i,
+    pattern: /^go(\s+)?(\d+)?$/i,
     handler: function (step) {
       return this.run(this.go, [arguments[1]])
     }
@@ -125,7 +125,7 @@ Boxbot.prototype.setResolution = function (size) {
 /**
  * 修墙
  * 
- * @param {[int]} [position]
+ * @param {[int]} [position] 默认为前方
  */
 Boxbot.prototype.build = function (position) {
   position = position || this.bot.getPosition(null, 1)
@@ -140,7 +140,7 @@ Boxbot.prototype.build = function (position) {
  * 涂色
  * 
  * @param {string} color
- * @param {[int]} [position]
+ * @param {[int]} [position] 默认为前方
  */
 Boxbot.prototype.setColor = function (color, position) {
   position = position || this.bot.getPosition(null, 1)
@@ -291,7 +291,7 @@ Boxbot.prototype.search = function (target, algorithm) {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
     if (path) {
       if (path.length > 1) {
-        path.shift()
+        path.shift() // 忽略掉起点
         path.forEach((function (item) {
           this.run(this.goto, [item, true])
         }).bind(this))

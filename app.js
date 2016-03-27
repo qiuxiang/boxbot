@@ -5,10 +5,10 @@ var Application = function () {
 
   this.$image = document.querySelector('#image')
   this.$random = document.querySelector('#random')
-  this.$run= document.querySelector('#run')
-  this.$reset= document.querySelector('#reset')
-  this.$duration= document.querySelector('#duration')
-  this.$resolution= document.querySelector('#resolution')
+  this.$run = document.querySelector('#run')
+  this.$reset = document.querySelector('#reset')
+  this.$duration = document.querySelector('#duration')
+  this.$resolution = document.querySelector('#resolution')
 
   this.init()
   this.reset()
@@ -24,10 +24,16 @@ Application.prototype.init = function () {
   this.$image.addEventListener('change', this.loadImage.bind(this))
 }
 
+/**
+ * 设置运行速度
+ */
 Application.prototype.setDuration = function () {
   this.boxbot.setDuration(parseInt(this.$duration.value))
 }
 
+/**
+ * 设置地图尺寸
+ */
 Application.prototype.setResolution = function () {
   this.boxbot.setResolution(parseInt(this.$resolution.value))
   this.reset()
@@ -76,7 +82,7 @@ Application.prototype.loadImage = function () {
 
 /**
  * 键盘事件处理
- * 
+ *
  * @param {Event} event
  */
 Application.prototype.hotkey = function (event) {
@@ -114,18 +120,20 @@ Application.prototype.run = function () {
     var prev = 0
     codes.forEach((function (code, i) {
       if (code) {
-        this.boxbot.exec(code).then((function () {
-          if (i % 37 == 0) {
-            this.editor.scrollTo(i)
-          }
-          this.editor.clearFlag(prev)
-          this.editor.setFlag(i, 'success')
-          prev = i
-        }).bind(this)).catch((function (e) {
-          console.log(e)
-          this.editor.clearFlag(prev)
-          this.editor.setFlag(i, 'warning')
-        }).bind(this))
+        this.boxbot.exec(code).then(
+          (function () {
+            if (i % 37 == 0) {
+              this.editor.scrollTo(i)
+            }
+            this.editor.clearFlag(prev)
+            this.editor.setFlag(i, 'success')
+            prev = i
+          }).bind(this),
+          (function (e) {
+            console.log(e)
+            this.editor.clearFlag(prev)
+            this.editor.setFlag(i, 'warning')
+          }).bind(this))
       }
     }).bind(this))
   }
