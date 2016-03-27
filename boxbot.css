@@ -143,6 +143,7 @@ td.boxbot-box {
   padding: 5px;
   margin: 0;
   background-color: #34495e;
+  resize: none;
 }
 
 .note {
