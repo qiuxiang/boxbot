@@ -90,7 +90,7 @@ Application.prototype.hotkey = function (event) {
     var direction = {37: LEFT, 38: TOP, 39: RIGHT, 40: BOTTOM}[event.keyCode]
     if (typeof direction != 'undefined') {
       if (direction == this.boxbot.bot.getCurrentDirection()) {
-        this.boxbot.run(this.boxbot.go).catch(function (e) {
+        this.boxbot.run(this.boxbot.go).then(null, function (e) {
           console.log(e)
         })
       } else {
