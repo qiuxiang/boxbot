@@ -15,7 +15,7 @@ var BoxbotBot = function (selector) {
 BoxbotBot.prototype.init = function () {
   this.element.style.left = this.element.clientWidth + 'px'
   this.element.style.top = this.element.clientHeight + 'px'
-  this.element.style.transform = 'rotate(0edg)'
+  this.element.style.transform = 'rotate(0deg)'
 }
 
 /**
