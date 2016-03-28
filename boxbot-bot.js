@@ -101,8 +101,8 @@ BoxbotBot.prototype.getCurrentOffset = function (direction) {
  */
 BoxbotBot.prototype.getCurrentPosition = function () {
   return [
-    this.getCurrentOffset('left') / this.element.clientWidth,
-    this.getCurrentOffset('top') / this.element.clientHeight]
+    Math.round(this.getCurrentOffset('left') / this.element.clientWidth),
+    Math.round(this.getCurrentOffset('top') / this.element.clientHeight)]
 }
 
 /**
