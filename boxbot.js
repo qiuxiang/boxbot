@@ -53,7 +53,7 @@ Boxbot.prototype.commands = [
     }
   },
   {
-    pattern: /^bru\s+(#\w+)$/i,
+    pattern: /^bru\s+(.*)$/i,
     handler: function (color) {
       return this.run(this.setColor, [color])
     }

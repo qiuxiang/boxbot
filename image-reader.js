@@ -11,16 +11,16 @@ var ImageReader = function () {
 /**
  * 读取图片数据
  *
- * @param {HTMLInputElement} file
+ * @param {Blob} file
  * @param {int} width
  * @param {int} height
  * @returns {Promise}
  */
 ImageReader.prototype.read = function (file, width, height) {
-  this.width = width
-  this.height = height
-  this.reader.readAsDataURL(file.files[0])
   return new Promise((function (resolve) {
+    this.width = width
+    this.height = height
+    this.reader.readAsDataURL(file)
     this.resolve = resolve
   }).bind(this))
 }
@@ -32,21 +32,10 @@ ImageReader.prototype.load = function () {
   for (var y = 0; y < this.width; y += 1) {
     data.push([])
     for (var x = 0; x < this.height; x += 1) {
-      data[y].push(this.toRGB(this.canvas.getImageData(x, y, 1, 1).data))
+      data[y].push(this.toRGBA(this.canvas.getImageData(x, y, 1, 1).data))
     }
   }
   this.resolve(data)
-}
-
-/**
- * 十进制转十六进制，如果不足两位则加前导零
- *
- * @param {int} dec
- * @returns {string}
- */
-ImageReader.prototype.toHex = function (dec) {
-  var hex = dec.toString(16)
-  return hex.length == 2 ? hex : '0' + hex
 }
 
 /**
@@ -55,6 +44,6 @@ ImageReader.prototype.toHex = function (dec) {
  * @param {CanvasPixelArray} pixel
  * @returns {string}
  */
-ImageReader.prototype.toRGB = function (pixel) {
-  return '#' + this.toHex(pixel[0]) + this.toHex(pixel[1]) + this.toHex(pixel[2])
+ImageReader.prototype.toRGBA = function (pixel) {
+  return 'rgba(' + pixel[0] + ',' + pixel[1] + ',' + pixel[2] + ',' + pixel[2] + ')'
 }
