@@ -43,41 +43,43 @@ Application.prototype.setResolution = function () {
  * 读取图片并生成绘图命令
  */
 Application.prototype.loadImage = function () {
-  this.imageReader
-    .read(this.$image, this.boxbot.map.columns, this.boxbot.map.rows)
-    .then((function (data) {
-      var commands = 'mov to 1,1\nmov bot\nmov top\n'
-      for (var y = 1; y <= data.length; y += 1) {
-        // 移动到下一个位置
-        if (y == data.length) {
-          commands += 'tun rig\ntra lef\n'
-        } else {
-          commands += 'tra bot\n'
+  if (this.$image.files.length > 0) {
+    this.imageReader
+      .read(this.$image.files[0], this.boxbot.map.columns, this.boxbot.map.rows)
+      .then((function (data) {
+        var commands = 'mov to 1,1\nmov bot\nmov top\n'
+        for (var y = 1; y <= data.length; y += 1) {
+          // 移动到下一个位置
+          if (y == data.length) {
+            commands += 'tun rig\ntra lef\n'
+          } else {
+            commands += 'tra bot\n'
+          }
+
+          var columns = data[y - 1].length
+          for (var x = 1; x <= columns; x += 1) {
+            // 最后一个方块无法修墙，结束绘图
+            if (y == data.length && x == columns) {
+              break
+            }
+
+            var _x = columns - x
+            var direction = 'lef'
+
+            if (y % 2) {
+              _x = [x - 1]
+              direction = 'rig'
+            }
+
+            if (x != 1) {
+              commands += 'tra ' + direction + '\n'
+            }
+            commands += 'biud\nbru ' + data[y - 1][_x] + '\n'
+          }
         }
-
-        var columns = data[y - 1].length
-        for (var x = 1; x <= columns; x += 1) {
-          // 最后一个方块无法修墙，结束绘图
-          if (y == data.length && x == columns) {
-            break
-          }
-
-          var _x = columns - x
-          var direction = 'lef'
-
-          if (y % 2) {
-            _x = [x - 1]
-            direction = 'rig'
-          }
-
-          if (x != 1) {
-            commands += 'tra ' + direction + '\n'
-          }
-          commands += 'biud\nbru ' + data[y - 1][_x] + '\n'
-        }
-      }
-      this.editor.setCodes(commands)
-    }).bind(this))
+        this.editor.setCodes(commands)
+      }).bind(this))
+  }
 }
 
 /**
@@ -159,7 +161,9 @@ Application.prototype.reset = function () {
   this.boxbot.queue = []
   this.boxbot.map.clear()
   this.boxbot.bot.init()
+  this.editor.setCodes('')
   this.editor.clearFlag()
+  this.$image.value = ''
 }
 
 new Application()
