@@ -161,7 +161,6 @@ Application.prototype.reset = function () {
   this.boxbot.queue = []
   this.boxbot.map.clear()
   this.boxbot.bot.init()
-  this.editor.setCodes('')
   this.editor.clearFlag()
   this.$image.value = ''
 }
