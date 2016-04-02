@@ -266,15 +266,14 @@ Boxbot.prototype.taskloop = function () {
   var task = this.queue.shift()
   if (task) {
     try {
-      task.callback(task.func.apply(this, task.params))
+      task.func.apply(this, task.params)
+      task.callback()
+      setTimeout(this.taskloop.bind(this), this.duration)
     } catch (e) {
       this.running = false
       this.queue = []
-      return task.callback(e)
+      task.callback(e)
     }
-
-    // 等待动画结束后运行下一个任务
-    setTimeout(this.taskloop.bind(this), this.duration)
   } else {
     this.running = false
   }
