@@ -101,6 +101,8 @@ Application.prototype.hotkey = function (event) {
     } else if (event.keyCode == 32) {
       this.boxbot.run(this.boxbot.build)
     }
+    //防止操作键盘上下键时，导致整个页面的上下移动
+    event.preventDefault()
   }
 }
 
