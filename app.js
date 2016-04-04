@@ -91,6 +91,7 @@ Application.prototype.hotkey = function (event) {
   if (event.target.tagName == 'BODY') {
     var direction = {37: LEFT, 38: TOP, 39: RIGHT, 40: BOTTOM}[event.keyCode]
     if (typeof direction != 'undefined') {
+      event.preventDefault()
       if (direction == this.boxbot.bot.getCurrentDirection()) {
         this.boxbot.run(this.boxbot.go).then(null, function (e) {
           console.log(e)
@@ -99,10 +100,9 @@ Application.prototype.hotkey = function (event) {
         this.boxbot.run(this.boxbot.turn, [direction])
       }
     } else if (event.keyCode == 32) {
+      event.preventDefault()
       this.boxbot.run(this.boxbot.build)
     }
-    //防止操作键盘上下键时，导致整个页面的上下移动
-    event.preventDefault()
   }
 }
 
