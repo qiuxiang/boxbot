@@ -55,44 +55,37 @@ BoxbotFinder.prototype.search = function (algorithm, from, to) {
 }
 
 /**
- * 深度优先搜索
- *
- * @param {[int]} from
- * @param {[int]} to
- */
-BoxbotFinder.prototype.dfs = function (from, to) {
-  return this.deep_first_search(to, [from])
-}
-
-/**
  * @param {[int]} distance 目标距离
- * @returns {[{weight: int, position: [int]}]}
+ * @returns {[{weight: int, x: int, y: int}]}
  */
-BoxbotFinder.prototype.createPositions = function (distance) {
-  var positions = [
-    {position: [0, 1]}, {position: [-1, 0]}, {position: [0, -1]}, {position: [1, 0]}
+BoxbotFinder.prototype.createOffsets = function (distance) {
+  var offsets = [
+    {x:0, y:1}, {x: -1, y: 0}, {x: 0, y: -1}, {x: 1, y: 0}
   ].map(function (item) {
-    item.weight = item.position[0] * distance[0] + item.position[1] * distance[1]
+    item.weight = item.x * distance[0] + item.y * distance[1]
     return item
   })
 
-  positions.sort(function (a, b) {
+  offsets.sort(function (a, b) {
     return b.weight - a.weight
   })
 
-  return positions
+  return offsets
 }
 
 /**
  * 递归实现的深度优先搜索算法
  *
- * @param target
  * @param path
+ * @param target
  * @param visited
  * @returns {[[int]]}
  */
-BoxbotFinder.prototype.deep_first_search = function (target, path, visited) {
-  visited = visited || {}
+BoxbotFinder.prototype.dfs = function (path, target, visited) {
+  if (!visited) {
+    visited = {}
+    path = [path]
+  }
 
   var current = path[path.length - 1]
   if (current[0] == target[0] && current[1] == target[1]) {
@@ -100,16 +93,16 @@ BoxbotFinder.prototype.deep_first_search = function (target, path, visited) {
     return path
   }
 
-  var positions = this.createPositions([target[0] - current[0], target[1] - current[1]])
-  for (var i = 0; i < positions.length; i += 1) {
-    var next = [positions[i].position[0] + current[0], positions[i].position[1] + current[1]]
+  var offsets = this.createOffsets([target[0] - current[0], target[1] - current[1]])
+  for (var i = 0; i < offsets.length; i += 1) {
+    var next = [offsets[i].x + current[0], offsets[i].y + current[1]]
     var positionKey = next[0] + '-' + next[1]
 
     if (this.isAvailable(next) && !visited[positionKey]) {
       path.push(next)
       visited[positionKey] = next
 
-      var result = this.deep_first_search(target, path, visited)
+      var result = this.dfs(path, target, visited)
       if (result) {
         return result
       }
@@ -128,15 +121,20 @@ BoxbotFinder.prototype.deep_first_search = function (target, path, visited) {
 BoxbotFinder.prototype.bfs = function (from, to) {
   var offsets = [[0, 1], [-1, 0], [0, -1], [1, 0]];
   var queue = [new FinderNode(null, from)]
+
   while (true) {
     var current = queue.shift()
+
     if (current.position[0] == to[0] && current.position[1] == to[1]) {
       return current.getPath()
     }
+
     for (var i = 0; i < offsets.length; i += 1) {
       var position = [current.position[0] + offsets[i][0], current.position[1] + offsets[i][1]]
+
       if (this.isAvailable(position) && !current.inParents(position)) {
         var node = new FinderNode(current, position)
+
         current.children.push(node)
         queue.push(node)
       }
