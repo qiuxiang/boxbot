@@ -1,3 +1,31 @@
+var FinderNode = function (parent, position) {
+  this.parent = parent
+  this.position = position
+  this.children = []
+}
+
+FinderNode.prototype.inParents = function (position, current) {
+  current = current || this
+  if (position[0] == current.position[0] && position[1] == current.position[1]) {
+    return true
+  }
+  if (!current.parent) {
+    return false
+  }
+  return this.inParents(position, current.parent)
+}
+
+FinderNode.prototype.getPath = function (current, path) {
+  current = current || this
+  path = path || []
+  if (current.parent) {
+    path.unshift(current.position)
+    return this.getPath(current.parent, path)
+  } else {
+    return path
+  }
+}
+
 /**
  * @constructor
  * @param {BoxbotMap} map
@@ -68,6 +96,7 @@ BoxbotFinder.prototype.deep_first_search = function (target, path, visited) {
 
   var current = path[path.length - 1]
   if (current[0] == target[0] && current[1] == target[1]) {
+    path.shift()
     return path
   }
 
@@ -86,6 +115,31 @@ BoxbotFinder.prototype.deep_first_search = function (target, path, visited) {
       }
 
       path.pop()
+    }
+  }
+}
+
+/**
+ * 广度优先搜索
+ *
+ * @param {[int]} from
+ * @param {[int]} to
+ */
+BoxbotFinder.prototype.bfs = function (from, to) {
+  var offsets = [[0, 1], [-1, 0], [0, -1], [1, 0]];
+  var queue = [new FinderNode(null, from)]
+  while (true) {
+    var current = queue.shift()
+    if (current.position[0] == to[0] && current.position[1] == to[1]) {
+      return current.getPath()
+    }
+    for (var i = 0; i < offsets.length; i += 1) {
+      var position = [current.position[0] + offsets[i][0], current.position[1] + offsets[i][1]]
+      if (this.isAvailable(position) && !current.inParents(position)) {
+        var node = new FinderNode(current, position)
+        current.children.push(node)
+        queue.push(node)
+      }
     }
   }
 }

@@ -59,9 +59,9 @@ Boxbot.prototype.commands = [
     }
   },
   {
-    pattern: /^mov\s+to\s+(\d+)[,\s+](\d+)(\s+)?(dfs)?$/i,
-    handler: function (x, y) {
-      return this.run(this.search, [[parseInt(x), parseInt(y)]])
+    pattern: /^mov\s+to\s+(\d+)[,\s+](\d+)(\s+)?(dfs|bfs)?$/i,
+    handler: function (x, y, _, algorithm) {
+      return this.run(this.search, [[parseInt(x), parseInt(y)], algorithm])
     }
   }
 ]
@@ -288,13 +288,10 @@ Boxbot.prototype.taskloop = function () {
 Boxbot.prototype.search = function (target, algorithm) {
   if (this.map.getType(target) == 'null') {
     var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
-    if (path) {
-      if (path.length > 1) {
-        path.shift() // 忽略掉起点
-        path.forEach((function (item) {
-          this.run(this.goto, [item, true])
-        }).bind(this))
-      }
+    if (path.length > 0) {
+      path.forEach((function (item) {
+        this.run(this.goto, [item, true])
+      }).bind(this))
     } else {
       throw '寻路失败'
     }
