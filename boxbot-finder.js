@@ -4,7 +4,7 @@ var FinderNode = function (parent, position) {
   this.children = []
 }
 
-FinderNode.prototype.inParents = function (position, current) {
+FinderNode.prototype.isParent = function (position, current) {
   current = current || this
   if (position[0] == current.position[0] && position[1] == current.position[1]) {
     return true
@@ -12,7 +12,7 @@ FinderNode.prototype.inParents = function (position, current) {
   if (!current.parent) {
     return false
   }
-  return this.inParents(position, current.parent)
+  return this.isParent(position, current.parent)
 }
 
 FinderNode.prototype.getPath = function (current, path) {
@@ -132,7 +132,7 @@ BoxbotFinder.prototype.bfs = function (from, to) {
     for (var i = 0; i < offsets.length; i += 1) {
       var position = [current.position[0] + offsets[i][0], current.position[1] + offsets[i][1]]
 
-      if (this.isAvailable(position) && !current.inParents(position)) {
+      if (this.isAvailable(position) && !current.isParent(position)) {
         var node = new FinderNode(current, position)
 
         current.children.push(node)
