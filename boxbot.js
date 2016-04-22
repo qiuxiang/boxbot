@@ -287,11 +287,20 @@ Boxbot.prototype.taskloop = function () {
  */
 Boxbot.prototype.search = function (target, algorithm) {
   if (this.map.getType(target) == 'null') {
-    var path = this.finder.search(algorithm || 'dfs', this.bot.getCurrentPosition(), target)
+    this.nextPosition = this.nextPosition || this.bot.getCurrentPosition()
+    var self = this
+    var path = this.finder.search(algorithm || 'dfs', this.nextPosition, target)
+    this.nextPosition = target
+
     if (path.length > 0) {
-      path.forEach((function (item) {
-        this.run(this.goto, [item, true])
-      }).bind(this))
+      path.forEach(function (item, i) {
+        if (i == path.length - 1) {
+          var then = function () {
+            self.nextPosition = null
+          }
+        }
+        self.run(self.goto, [item, true]).then(then)
+      })
     } else {
       throw '寻路失败'
     }
