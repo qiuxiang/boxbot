@@ -9,18 +9,28 @@ var Promise = function (executor) {
 }
 
 Promise.prototype.resolve = function (value) {
-  if (this.onResolve) {
-    this.onResolve(value)
-  }
+  setTimeout((function () {
+    if (this.onResolve) {
+      this.onResolve(value)
+    }
+  }).bind(this), 0)
 }
 
 Promise.prototype.reject = function (reason) {
-  if (this.onReject) {
-    this.onReject(reason)
-  }
+  setTimeout((function () {
+    if (this.onReject) {
+      this.onReject(reason)
+    }
+  }).bind(this), 0)
 }
 
 Promise.prototype.then = function (onResolve, onReject) {
   this.onResolve = onResolve
+  if (onReject) {
+    this.onReject = onReject
+  }
+}
+
+Promise.prototype.catch = function (onReject) {
   this.onReject = onReject
 }

@@ -44,9 +44,10 @@ Application.prototype.setResolution = function () {
  */
 Application.prototype.loadImage = function () {
   if (this.$image.files.length > 0) {
+    var self = this
     this.imageReader
       .read(this.$image.files[0], this.boxbot.map.columns, this.boxbot.map.rows)
-      .then((function (data) {
+      .then(function (data) {
         var commands = 'mov to 1,1\nmov bot\nmov top\n'
         for (var y = 1; y <= data.length; y += 1) {
           // 移动到下一个位置
@@ -77,8 +78,8 @@ Application.prototype.loadImage = function () {
             commands += 'biud\nbru ' + data[y - 1][_x] + '\n'
           }
         }
-        this.editor.setCodes(commands)
-      }).bind(this))
+        self.editor.setCodes(commands)
+      })
   }
 }
 
@@ -93,7 +94,7 @@ Application.prototype.hotkey = function (event) {
     if (typeof direction != 'undefined') {
       event.preventDefault()
       if (direction == this.boxbot.bot.getCurrentDirection()) {
-        this.boxbot.run(this.boxbot.go).then(null, function (e) {
+        this.boxbot.run(this.boxbot.go).catch(function (e) {
           console.log(e)
         })
       } else {
@@ -121,25 +122,26 @@ Application.prototype.run = function () {
 
   // 依次运行命令
   if (!parseError) {
+    var self = this
     var prev = 0
-    codes.forEach((function (code, i) {
+    codes.forEach(function (code, i) {
       if (code) {
-        this.boxbot.exec(code).then(
-          (function () {
+        self.boxbot.exec(code).then(
+          function () {
             if (i % 37 == 0) {
-              this.editor.scrollTo(i)
+              self.editor.scrollTo(i)
             }
-            this.editor.clearFlag(prev)
-            this.editor.setFlag(i, 'success')
+            self.editor.clearFlag(prev)
+            self.editor.setFlag(i, 'success')
             prev = i
-          }).bind(this),
-          (function (e) {
+          },
+          function (e) {
             console.log(e)
-            this.editor.clearFlag(prev)
-            this.editor.setFlag(i, 'warning')
-          }).bind(this))
+            self.editor.clearFlag(prev)
+            self.editor.setFlag(i, 'warning')
+          })
       }
-    }).bind(this))
+    })
   }
 }
 
